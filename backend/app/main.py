@@ -42,14 +42,19 @@ app = FastAPI(
 from app.core.rate_limit import InMemoryRateLimiter
 app.add_middleware(InMemoryRateLimiter)
 
-# CORS Hardening: Explicitly specify allowed HTTP methods and headers
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.origins_list,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allow_headers=["Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"],
-)
+# CORS configuration: Allow all web origins (including Vercel preview and production URLs)
+cors_kwargs = {
+    "allow_credentials": True,
+    "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    "allow_headers": ["Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"],
+}
+if "*" in settings.origins_list:
+    cors_kwargs["allow_origin_regex"] = r"^https?://.*"
+else:
+    cors_kwargs["allow_origins"] = settings.origins_list
+
+app.add_middleware(CORSMiddleware, **cors_kwargs)
+
 
 from app.api.v1.routes import routing, weather, risk, cost, vehicle, cargo, optimizer, accessibility, assistant, alerts, analytics, admin
 
