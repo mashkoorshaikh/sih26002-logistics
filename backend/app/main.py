@@ -42,14 +42,41 @@ app = FastAPI(
 from app.core.rate_limit import InMemoryRateLimiter
 app.add_middleware(InMemoryRateLimiter)
 
-# CORS configuration: Allow all web origins (including all Vercel preview and production URLs)
+from fastapi.responses import Response
+
+# Bulletproof CORS Handler for all client platforms (Vercel, localhost, mobile)
+@app.middleware("http")
+async def cors_handler_middleware(request: Request, call_next):
+    origin = request.headers.get("origin", "*")
+    if request.method == "OPTIONS":
+        return Response(
+            status_code=200,
+            headers={
+                "Access-Control-Allow-Origin": origin if origin != "*" else "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD",
+                "Access-Control-Allow-Headers": "Authorization, Content-Type, Accept, Origin, X-Requested-With, *",
+                "Access-Control-Allow-Credentials": "true",
+                "Access-Control-Max-Age": "86400",
+            },
+        )
+    response = await call_next(request)
+    if origin and origin != "*":
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+    elif origin == "*":
+        response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"^https?://.*",
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 
