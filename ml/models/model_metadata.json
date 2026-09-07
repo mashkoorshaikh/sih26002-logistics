@@ -1,0 +1,50 @@
+{
+  "model_name": "NER_Transportation_Route_Risk_RandomForest",
+  "algorithm": "RandomForestClassifier",
+  "parameters": {
+    "n_estimators": 150,
+    "max_depth": 12,
+    "min_samples_split": 4,
+    "min_samples_leaf": 2,
+    "class_weight": "balanced",
+    "random_state": 42
+  },
+  "classes": [
+    "LOW",
+    "MEDIUM",
+    "HIGH"
+  ],
+  "input_features": [
+    "rainfall",
+    "slope",
+    "road_quality",
+    "visibility",
+    "traffic",
+    "historical_incidents",
+    "elevation",
+    "temperature",
+    "wind_speed",
+    "road_type"
+  ],
+  "transformed_features": [
+    "rainfall",
+    "slope",
+    "road_quality",
+    "visibility",
+    "traffic",
+    "historical_incidents",
+    "elevation",
+    "temperature",
+    "wind_speed",
+    "road_type_national_highway",
+    "road_type_rural_hill_road",
+    "road_type_state_highway"
+  ],
+  "train_samples": 2800,
+  "test_samples": 700,
+  "cv_accuracy_mean": 0.8714,
+  "cv_accuracy_std": 0.0115,
+  "disclaimer": "Trained on SYNTHETIC / DEMO data only. NOT for production safety-critical use.",
+  "production_ready": false,
+  "trained_at_utc": "2026-09-06T03:50:02.054549Z"
+}

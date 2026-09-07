@@ -1,0 +1,107 @@
+{
+  "evaluation_dataset": "Synthetic/Demo Route Risk Dataset",
+  "is_synthetic": true,
+  "is_production_ready": false,
+  "test_samples": 700,
+  "accuracy": 0.8729,
+  "precision_macro": 0.8561,
+  "precision_weighted": 0.8748,
+  "recall_macro": 0.8608,
+  "recall_weighted": 0.8729,
+  "f1_score_macro": 0.8583,
+  "f1_score_weighted": 0.8737,
+  "per_class": {
+    "LOW": {
+      "precision": 0.9358,
+      "recall": 0.9103,
+      "f1_score": 0.9229,
+      "support": 368
+    },
+    "MEDIUM": {
+      "precision": 0.7915,
+      "recall": 0.823,
+      "f1_score": 0.8069,
+      "support": 226
+    },
+    "HIGH": {
+      "precision": 0.8411,
+      "recall": 0.8491,
+      "f1_score": 0.8451,
+      "support": 106
+    }
+  },
+  "confusion_matrix": {
+    "classes": [
+      "LOW",
+      "MEDIUM",
+      "HIGH"
+    ],
+    "matrix": [
+      [
+        335,
+        33,
+        0
+      ],
+      [
+        23,
+        186,
+        17
+      ],
+      [
+        0,
+        16,
+        90
+      ]
+    ]
+  },
+  "feature_importances": [
+    {
+      "feature": "slope",
+      "importance": 0.1879
+    },
+    {
+      "feature": "rainfall",
+      "importance": 0.1713
+    },
+    {
+      "feature": "visibility",
+      "importance": 0.1485
+    },
+    {
+      "feature": "road_type_rural_hill_road",
+      "importance": 0.0781
+    },
+    {
+      "feature": "road_quality",
+      "importance": 0.0777
+    },
+    {
+      "feature": "elevation",
+      "importance": 0.0718
+    },
+    {
+      "feature": "road_type_national_highway",
+      "importance": 0.0698
+    },
+    {
+      "feature": "historical_incidents",
+      "importance": 0.0564
+    },
+    {
+      "feature": "temperature",
+      "importance": 0.0382
+    },
+    {
+      "feature": "traffic",
+      "importance": 0.0359
+    },
+    {
+      "feature": "wind_speed",
+      "importance": 0.0337
+    },
+    {
+      "feature": "road_type_state_highway",
+      "importance": 0.0307
+    }
+  ]
+}

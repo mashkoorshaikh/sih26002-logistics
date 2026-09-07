@@ -1,0 +1,13 @@
+/* App-level utility enhancements and layout constraints */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Print optimizations for administrative logistics reports */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
