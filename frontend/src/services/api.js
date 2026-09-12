@@ -1,11 +1,14 @@
 import axios from 'axios'
 import { useAuthStore } from '../store/authStore'
 
-const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const PRODUCTION_API_URL = 'https://ner-logistics-backend.onrender.com'
+const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || (isLocalhost ? 'http://localhost:8000' : PRODUCTION_API_URL)
 const api = axios.create({
   baseURL: rawBaseUrl.replace(/\/+$/, ''),
   headers: { 'Content-Type': 'application/json' },
 })
+
 
 // Attach JWT token to every request
 api.interceptors.request.use((config) => {
