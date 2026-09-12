@@ -8,7 +8,7 @@ export const analyticsService = {
    */
   async getOverview(timeRange = '30d', persona = 'all') {
     try {
-      const res = await api.get(`/api/analytics/overview?time_range=${timeRange}&persona=${persona}`)
+      const res = await api.get(`/api/v1/analytics/overview?time_range=${timeRange}&persona=${persona}`)
       return res.data
     } catch (err) {
       console.warn('Analytics overview API fallback:', err)
@@ -22,7 +22,7 @@ export const analyticsService = {
    */
   async getAllMetrics(timeRange = '30d') {
     try {
-      const res = await api.get(`/api/analytics/metrics?time_range=${timeRange}`)
+      const res = await api.get(`/api/v1/analytics/metrics?time_range=${timeRange}`)
       return res.data
     } catch (err) {
       console.warn('Analytics metrics API fallback:', err)

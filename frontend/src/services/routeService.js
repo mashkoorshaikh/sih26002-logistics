@@ -13,18 +13,10 @@ export const routeService = {
    * @returns {Promise<Object>} Structured route information
    */
   async calculateRoute(payload) {
-    try {
-      const response = await api.post('/api/routes/calculate', payload)
-      return response.data
-    } catch (err) {
-      // If direct route fails, try v1 prefix
-      if (err.response?.status === 404) {
-        const fallbackResp = await api.post('/api/v1/routes/calculate', payload)
-        return fallbackResp.data
-      }
-      throw err
-    }
+    const response = await api.post('/api/v1/routes/calculate', payload)
+    return response.data
   }
+
 }
 
 export default routeService

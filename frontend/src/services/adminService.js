@@ -14,7 +14,7 @@ export const adminService = {
       if (filters.cargo) params.append('cargo', filters.cargo)
       if (filters.dateRange) params.append('date_range', filters.dateRange)
 
-      const res = await api.get(`/api/admin/dashboard?${params.toString()}`)
+      const res = await api.get(`/api/v1/admin/dashboard?${params.toString()}`)
       return res.data
     } catch (err) {
       console.warn('Admin dashboard API fallback:', err)
@@ -27,7 +27,7 @@ export const adminService = {
    */
   async getRoutes(risk = null) {
     try {
-      const url = risk ? `/api/admin/routes?risk=${risk}` : '/api/admin/routes'
+      const url = risk ? `/api/v1/admin/routes?risk=${risk}` : '/api/v1/admin/routes'
       const res = await api.get(url)
       return res.data
     } catch (err) {
@@ -41,7 +41,7 @@ export const adminService = {
    */
   async getHubs(state = null) {
     try {
-      const url = state ? `/api/admin/hubs?state=${state}` : '/api/admin/hubs'
+      const url = state ? `/api/v1/admin/hubs?state=${state}` : '/api/v1/admin/hubs'
       const res = await api.get(url)
       return res.data
     } catch (err) {
@@ -55,7 +55,7 @@ export const adminService = {
    */
   async getHazards() {
     try {
-      const res = await api.get('/api/admin/hazards')
+      const res = await api.get('/api/v1/admin/hazards')
       return res.data
     } catch (err) {
       console.warn('Admin hazards API fallback:', err)
@@ -68,7 +68,7 @@ export const adminService = {
    */
   async getNerChallenges() {
     try {
-      const res = await api.get('/api/admin/ner/challenges')
+      const res = await api.get('/api/v1/admin/ner/challenges')
       return res.data
     } catch (err) {
       console.warn('Admin challenges API fallback:', err)
@@ -82,8 +82,8 @@ export const adminService = {
   async getNerGeoJson(state = null) {
     try {
       const url = state && state !== 'ALL'
-        ? `/api/admin/ner/geojson?state=${encodeURIComponent(state)}`
-        : '/api/admin/ner/geojson'
+        ? `/api/v1/admin/ner/geojson?state=${encodeURIComponent(state)}`
+        : '/api/v1/admin/ner/geojson'
       const res = await api.get(url)
       return res.data
     } catch (err) {

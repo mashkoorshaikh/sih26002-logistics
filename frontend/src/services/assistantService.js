@@ -14,7 +14,7 @@ export const assistantService = {
    * @param {Array} [payload.chat_history] - Conversation history
    */
   async askAssistant(payload) {
-    const response = await api.post('/api/assistant', payload)
+    const response = await api.post('/api/v1/assistant', payload)
     return response.data
   },
 
@@ -23,7 +23,7 @@ export const assistantService = {
    */
   async checkHealth() {
     try {
-      const response = await api.get('/api/assistant/health')
+      const response = await api.get('/api/v1/assistant/health')
       return response.data
     } catch (err) {
       return { status: 'offline', error: err.message }

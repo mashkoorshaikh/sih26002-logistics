@@ -14,7 +14,7 @@ export const weatherService = {
     if (lat !== undefined) params.lat = lat
     if (lon !== undefined) params.lon = lon
 
-    const response = await api.get('/api/weather', { params })
+    const response = await api.get('/api/v1/weather', { params })
     return response.data
   },
 
@@ -23,7 +23,7 @@ export const weatherService = {
    * @param {Object} payload
    */
   async queryWeather(payload) {
-    const response = await api.post('/api/weather', payload)
+    const response = await api.post('/api/v1/weather', payload)
     return response.data
   }
 }

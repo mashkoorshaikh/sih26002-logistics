@@ -1,7 +1,8 @@
 import sys
 import asyncio
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import Response, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 if sys.platform == "win32":
@@ -38,37 +39,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Rate Limiting & Anti-Abuse Protection
-from app.core.rate_limit import InMemoryRateLimiter
-app.add_middleware(InMemoryRateLimiter)
-
-from fastapi.responses import Response
-
-# Bulletproof CORS Handler for all client platforms (Vercel, localhost, mobile)
-@app.middleware("http")
-async def cors_handler_middleware(request: Request, call_next):
-    origin = request.headers.get("origin", "*")
-    if request.method == "OPTIONS":
-        return Response(
-            status_code=200,
-            headers={
-                "Access-Control-Allow-Origin": origin if origin != "*" else "*",
-                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD",
-                "Access-Control-Allow-Headers": "Authorization, Content-Type, Accept, Origin, X-Requested-With, *",
-                "Access-Control-Allow-Credentials": "true",
-                "Access-Control-Max-Age": "86400",
-            },
-        )
-    response = await call_next(request)
-    if origin and origin != "*":
-        response.headers["Access-Control-Allow-Origin"] = origin
-        response.headers["Access-Control-Allow-Credentials"] = "true"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD"
-        response.headers["Access-Control-Allow-Headers"] = "*"
-    elif origin == "*":
-        response.headers["Access-Control-Allow-Origin"] = "*"
-    return response
-
+# CORS — single unified middleware (no duplicate custom handler)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -77,30 +48,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Rate Limiting & Anti-Abuse Protection
+from app.core.rate_limit import InMemoryRateLimiter
+app.add_middleware(InMemoryRateLimiter)
 
 
 
-from app.api.v1.routes import routing, weather, risk, cost, vehicle, cargo, optimizer, accessibility, assistant, alerts, analytics, admin
 
-# Routers
+# Routers — all routes served under /api/v1/* via the unified api_router
 app.include_router(api_router)
-app.include_router(routing.router, prefix="/api/routes")
-app.include_router(weather.router, prefix="/api/weather")
-app.include_router(risk.router, prefix="/api/risk")
-app.include_router(cost.router, prefix="/api/cost")
-app.include_router(vehicle.router, prefix="/api/vehicles")
-app.include_router(cargo.router, prefix="/api/cargo")
-app.include_router(optimizer.router, prefix="/api/optimizer")
-app.include_router(accessibility.router, prefix="/api/accessibility", tags=["Accessibility Intelligence"])
-app.include_router(assistant.router, prefix="/api/assistant", tags=["AI Logistics Assistant"])
-app.include_router(alerts.router, prefix="/api/alerts", tags=["Route Alerts & Monitoring"])
-app.include_router(analytics.router, prefix="/api/analytics", tags=["Logistics Analytics & KPIs"])
-app.include_router(admin.router, prefix="/api/admin", tags=["Admin & Government Authority"])
 
 
-
-from fastapi import Request
-from fastapi.responses import JSONResponse
 from sqlalchemy import text
 import logging
 
