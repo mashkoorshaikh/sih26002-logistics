@@ -12,7 +12,8 @@ import {
   Clock,
   Shield,
   Fuel,
-  Info
+  Info,
+  X
 } from 'lucide-react'
 import {
   Card,
@@ -67,7 +68,7 @@ const INITIAL_VEHICLES = [
     mileage_kmpl: 4.5,
     status: 'ACTIVE',
     assigned_driver: 'J. Sangma',
-    current_corridor: 'Guwahati ➔ Shillong (Lifeline Cold Chain)',
+    current_corridor: 'Guwahati ➔ Shillong (Cold Chain)',
     last_inspection: '2026-09-04'
   },
   {
@@ -153,7 +154,7 @@ export default function VehiclesPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Header */}
       <PageHeader
         title="Fleet & Vehicle Management"
@@ -165,6 +166,7 @@ export default function VehiclesPage() {
         action={
           <Button
             variant="primary"
+            size="md"
             icon={Plus}
             onClick={() => setShowAddModal(true)}
           >
@@ -174,20 +176,20 @@ export default function VehiclesPage() {
       />
 
       {/* Fleet Overview Metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
-        <Card padding="sm" className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-[var(--primary-subtle)] text-[var(--primary)] flex items-center justify-center flex-shrink-0 shadow-xs">
-            <Truck className="w-5.5 h-5.5" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Card padding="sm" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--primary-subtle)] text-[var(--primary)] flex items-center justify-center flex-shrink-0 shadow-xs">
+            <Truck className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs text-[var(--text-muted)] font-medium">Total Registered</div>
+            <div className="text-xs text-[var(--text-muted)] font-medium">Total Fleet</div>
             <div className="text-xl font-bold text-[var(--text-primary)]">{vehicles.length}</div>
           </div>
         </Card>
 
-        <Card padding="sm" className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-[var(--risk-low-bg)] text-[var(--risk-low)] flex items-center justify-center flex-shrink-0 shadow-xs">
-            <CheckCircle2 className="w-5.5 h-5.5" />
+        <Card padding="sm" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--risk-low-bg)] text-[var(--risk-low)] flex items-center justify-center flex-shrink-0 shadow-xs">
+            <CheckCircle2 className="w-5 h-5" />
           </div>
           <div>
             <div className="text-xs text-[var(--text-muted)] font-medium">Active En Route</div>
@@ -197,21 +199,21 @@ export default function VehiclesPage() {
           </div>
         </Card>
 
-        <Card padding="sm" className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-[var(--risk-med-bg)] text-[var(--risk-med)] flex items-center justify-center flex-shrink-0 shadow-xs">
-            <Clock className="w-5.5 h-5.5" />
+        <Card padding="sm" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--risk-med-bg)] text-[var(--risk-med)] flex items-center justify-center flex-shrink-0 shadow-xs">
+            <Clock className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs text-[var(--text-muted)] font-medium">In Maintenance</div>
+            <div className="text-xs text-[var(--text-muted)] font-medium">Maintenance</div>
             <div className="text-xl font-bold text-[var(--text-primary)]">
               {vehicles.filter(v => v.status === 'MAINTENANCE').length}
             </div>
           </div>
         </Card>
 
-        <Card padding="sm" className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-[var(--bg-surface-subtle)] text-[var(--text-secondary)] flex items-center justify-center flex-shrink-0 shadow-xs">
-            <Fuel className="w-5.5 h-5.5" />
+        <Card padding="sm" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--bg-surface-subtle)] text-[var(--text-secondary)] flex items-center justify-center flex-shrink-0 shadow-xs">
+            <Fuel className="w-5 h-5" />
           </div>
           <div>
             <div className="text-xs text-[var(--text-muted)] font-medium">Avg Fleet Mileage</div>
@@ -221,22 +223,22 @@ export default function VehiclesPage() {
       </div>
 
       {/* Filter Toolbar */}
-      <Card padding="sm" className="mb-6">
+      <Card padding="sm">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <div className="flex-1 max-w-sm">
+          <div className="flex-1 max-w-md">
             <Input
-              placeholder="Search by vehicle, registration, or driver..."
+              placeholder="Search by vehicle, plate, or driver..."
               icon={Search}
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
             <Select
               value={filterType}
               onChange={e => setFilterType(e.target.value)}
-              className="w-44"
+              className="w-full sm:w-48"
             >
               <option value="ALL">All Vehicle Types</option>
               <option value="Multi-Axle Heavy Truck">Multi-Axle Heavy Truck</option>
@@ -249,7 +251,7 @@ export default function VehiclesPage() {
             <Select
               value={filterStatus}
               onChange={e => setFilterStatus(e.target.value)}
-              className="w-32"
+              className="w-full sm:w-36"
             >
               <option value="ALL">All Status</option>
               <option value="ACTIVE">Active</option>
@@ -260,12 +262,12 @@ export default function VehiclesPage() {
         </div>
       </Card>
 
-      {/* Vehicle Table or Empty State */}
+      {/* Desktop Table View (>= 768px) */}
       {filteredVehicles.length === 0 ? (
         <EmptyState
           icon={Truck}
-          title="No vehicles match your filters"
-          description="Try broadening your search query or reset filters to display all registered fleet carriers."
+          title="No vehicles match your criteria"
+          description="Try modifying your search or reset filters to display all registered fleet carriers."
           action={
             <Button
               variant="outline"
@@ -277,159 +279,233 @@ export default function VehiclesPage() {
           }
         />
       ) : (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeader>Vehicle & Registration</TableHeader>
-              <TableHeader>Category & Type</TableHeader>
-              <TableHeader>Capacity / Dimensions</TableHeader>
-              <TableHeader>Efficiency</TableHeader>
-              <TableHeader>Driver & Corridor</TableHeader>
-              <TableHeader>Status</TableHeader>
-              <TableHeader className="text-right">Actions</TableHeader>
-            </TableRow>
-          </TableHead>
-          <tbody>
+        <>
+          <div className="hidden md:block">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableHeader>Vehicle & Plate</TableHeader>
+                  <TableHeader>Type</TableHeader>
+                  <TableHeader>Capacity / Dimensions</TableHeader>
+                  <TableHeader>Efficiency</TableHeader>
+                  <TableHeader>Driver & Corridor</TableHeader>
+                  <TableHeader>Status</TableHeader>
+                  <TableHeader className="text-right">Actions</TableHeader>
+                </TableRow>
+              </TableHead>
+              <tbody>
+                {filteredVehicles.map(veh => (
+                  <TableRow key={veh.id}>
+                    <TableCell>
+                      <div className="font-bold text-[var(--text-primary)]">{veh.name}</div>
+                      <div className="text-[11px] text-[var(--text-muted)] font-mono">{veh.plate}</div>
+                    </TableCell>
+
+                    <TableCell>
+                      <span className="text-xs text-[var(--text-secondary)]">{veh.type}</span>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="font-semibold text-[var(--text-primary)]">{veh.weight_capacity_tonnes} t</div>
+                      <div className="text-[11px] text-[var(--text-muted)]">{veh.dimensions}</div>
+                    </TableCell>
+
+                    <TableCell>
+                      <span className="text-xs font-semibold text-[var(--primary)]">{veh.mileage_kmpl} km/L</span>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="text-xs font-semibold text-[var(--text-primary)]">{veh.assigned_driver}</div>
+                      <div className="text-[11px] text-[var(--text-secondary)] truncate max-w-xs">{veh.current_corridor}</div>
+                    </TableCell>
+
+                    <TableCell>
+                      <Badge
+                        variant={veh.status === 'ACTIVE' ? 'low' : veh.status === 'MAINTENANCE' ? 'medium' : 'neutral'}
+                        size="sm"
+                        dot
+                      >
+                        {veh.status}
+                      </Badge>
+                    </TableCell>
+
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          type="button"
+                          onClick={() => alert(`Viewing telemetry details for ${veh.name}`)}
+                          className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-subtle)] transition-colors cursor-pointer"
+                          title="View Details"
+                        >
+                          <Info className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(veh.id)}
+                          className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--color-danger)] hover:bg-[var(--risk-high-bg)] transition-colors cursor-pointer"
+                          title="Remove vehicle"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+
+          {/* Mobile Card View (< 768px: Zero Horizontal Scroll) */}
+          <div className="md:hidden space-y-3">
             {filteredVehicles.map(veh => (
-              <TableRow key={veh.id}>
-                <TableCell>
-                  <div className="font-semibold text-[var(--text-primary)]">{veh.name}</div>
-                  <div className="text-[11px] text-[var(--text-muted)] font-mono">{veh.plate}</div>
-                </TableCell>
-
-                <TableCell>
-                  <span className="text-xs text-[var(--text-secondary)]">{veh.type}</span>
-                </TableCell>
-
-                <TableCell>
-                  <div className="font-medium text-[var(--text-primary)]">{veh.weight_capacity_tonnes} Tonnes</div>
-                  <div className="text-[11px] text-[var(--text-muted)]">{veh.dimensions}</div>
-                </TableCell>
-
-                <TableCell>
-                  <span className="text-xs text-[var(--text-primary)] font-medium">{veh.mileage_kmpl} km/L</span>
-                </TableCell>
-
-                <TableCell>
-                  <div className="text-xs text-[var(--text-primary)] font-medium">{veh.assigned_driver}</div>
-                  <div className="text-[11px] text-[var(--text-muted)] truncate max-w-xs">{veh.current_corridor}</div>
-                </TableCell>
-
-                <TableCell>
+              <Card key={veh.id} padding="sm" className="space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <h3 className="text-sm font-bold text-[var(--text-primary)]">{veh.name}</h3>
+                    <span className="text-xs font-mono text-[var(--text-muted)]">{veh.plate}</span>
+                  </div>
                   <Badge
                     variant={veh.status === 'ACTIVE' ? 'low' : veh.status === 'MAINTENANCE' ? 'medium' : 'neutral'}
+                    size="sm"
                     dot
                   >
                     {veh.status}
                   </Badge>
-                </TableCell>
+                </div>
 
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-1.5">
+                <div className="grid grid-cols-2 gap-2 text-xs py-2 border-t border-b border-[var(--border-subtle)]">
+                  <div>
+                    <span className="text-[10px] text-[var(--text-muted)] uppercase block">Category</span>
+                    <span className="font-semibold text-[var(--text-primary)] truncate block">{veh.type}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-[var(--text-muted)] uppercase block">Capacity</span>
+                    <span className="font-semibold text-[var(--text-primary)]">{veh.weight_capacity_tonnes} t</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-[var(--text-muted)] uppercase block">Driver</span>
+                    <span className="font-semibold text-[var(--text-primary)]">{veh.assigned_driver}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-[var(--text-muted)] uppercase block">Mileage</span>
+                    <span className="font-semibold text-[var(--primary)]">{veh.mileage_kmpl} km/L</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
+                  <span className="truncate max-w-[200px] text-[11px]">{veh.current_corridor}</span>
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => alert(`Viewing telemetry details for ${veh.name}`)}
-                      className="p-1.5 rounded text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-subtle)]"
-                      title="View Details"
+                      onClick={() => alert(`Viewing details for ${veh.name}`)}
+                      className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-secondary)]"
                     >
-                      <Info className="w-4 h-4" />
+                      <Info className="w-3.5 h-3.5" />
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(veh.id)}
-                      className="p-1.5 rounded text-[var(--text-muted)] hover:text-[var(--color-danger)] hover:bg-[var(--risk-high-bg)]"
-                      title="Delete Vehicle"
+                      className="p-1.5 rounded-lg border border-[var(--risk-high-border)] text-[var(--color-danger)] bg-[var(--risk-high-bg)]"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
-                </TableCell>
-              </TableRow>
+                </div>
+              </Card>
             ))}
-          </tbody>
-        </Table>
+          </div>
+        </>
       )}
 
       {/* Add Vehicle Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-2xl p-6 shadow-xl">
-            <h3 className="text-base font-bold text-[var(--text-primary)] mb-1">
-              Add New Freight Vehicle
-            </h3>
-            <p className="text-xs text-[var(--text-muted)] mb-5">
-              Register truck axle weight, physical clearances, and mileage profile for OR-Tools compatibility.
-            </p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-2xl shadow-xl overflow-hidden animate-scale-up">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)]">
+              <h3 className="text-base font-bold text-[var(--text-primary)]">
+                Register New Logistics Vehicle
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowAddModal(false)}
+                className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-subtle)] cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-            <form onSubmit={handleAddSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleAddSubmit} className="p-6 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label="Vehicle Model / Make"
-                  placeholder="e.g. Tata Signa 2823"
+                  placeholder="e.g. Tata Signa 2823.K"
                   required
                   value={newVehicle.name}
                   onChange={e => setNewVehicle({ ...newVehicle, name: e.target.value })}
                 />
                 <Input
-                  label="Registration Number"
-                  placeholder="e.g. AS-01-XY-1234"
+                  label="Registration Plate"
+                  placeholder="e.g. AS-01-EC-4821"
                   required
                   value={newVehicle.plate}
                   onChange={e => setNewVehicle({ ...newVehicle, plate: e.target.value })}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Select
                   label="Vehicle Category"
                   value={newVehicle.type}
                   onChange={e => setNewVehicle({ ...newVehicle, type: e.target.value })}
                 >
-                  <option value="Multi-Axle Heavy Truck">Multi-Axle Heavy Truck</option>
                   <option value="Standard Freight Truck">Standard Freight Truck</option>
-                  <option value="Refrigerated Reefer Truck">Refrigerated Reefer Truck</option>
+                  <option value="Multi-Axle Heavy Truck">Multi-Axle Heavy Truck</option>
+                  <option value="Refrigerated Reefer Truck">Reefer Truck</option>
                   <option value="Tipper / Mountain Cargo">Tipper / Mountain Cargo</option>
                   <option value="Mini Truck (LCV)">Mini Truck (LCV)</option>
                 </Select>
 
                 <Input
-                  label="Gross Weight Capacity (Tonnes)"
+                  label="Tare Capacity (Tonnes)"
                   type="number"
                   step="0.5"
                   required
                   value={newVehicle.weight_capacity_tonnes}
-                  onChange={e => setNewVehicle({ ...newVehicle, weight_capacity_tonnes: parseFloat(e.target.value) || 0 })}
+                  onChange={e => setNewVehicle({ ...newVehicle, weight_capacity_tonnes: parseFloat(e.target.value) || 10 })}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
-                  label="Assigned Driver"
-                  placeholder="e.g. R. Das"
+                  label="Assigned Convoy Driver"
+                  placeholder="e.g. R. K. Barman"
+                  required
                   value={newVehicle.assigned_driver}
                   onChange={e => setNewVehicle({ ...newVehicle, assigned_driver: e.target.value })}
                 />
+
                 <Input
-                  label="Rated Mileage (km/L)"
+                  label="Avg Fuel Economy (km/L)"
                   type="number"
                   step="0.1"
+                  required
                   value={newVehicle.mileage_kmpl}
-                  onChange={e => setNewVehicle({ ...newVehicle, mileage_kmpl: parseFloat(e.target.value) || 0 })}
+                  onChange={e => setNewVehicle({ ...newVehicle, mileage_kmpl: parseFloat(e.target.value) || 5.0 })}
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-[var(--border-subtle)]">
+              <div className="pt-4 border-t border-[var(--border-subtle)] flex items-center justify-end gap-3">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="md"
                   onClick={() => setShowAddModal(false)}
                 >
                   Cancel
                 </Button>
                 <Button
+                  type="submit"
                   variant="primary"
                   size="md"
-                  type="submit"
                 >
                   Save Vehicle
                 </Button>

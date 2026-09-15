@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authService } from '../services/authService'
 import { useAuthStore } from '../store/authStore'
-import { MapPin, Mail, Lock, Eye, EyeOff, AlertCircle, Building2, ShieldCheck } from 'lucide-react'
+import { MapPin, Mail, Lock, Eye, EyeOff, AlertCircle, Building2, ShieldCheck, Compass } from 'lucide-react'
+import { Card, Button, Input } from '../components/ui'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -41,140 +42,106 @@ export default function Login() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'var(--bg-dark)', padding: 24, position: 'relative', overflow: 'hidden'
-    }}>
-      {/* Background glow */}
-      <div style={{
-        position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%,-50%)',
-        width: 500, height: 500, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)',
-        pointerEvents: 'none'
-      }}/>
-
-      <div className="glass-card animate-fade-in-up" style={{ width: '100%', maxWidth: 420, padding: 40 }}>
-        {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{
-            width: 52, height: 52, borderRadius: 16, margin: '0 auto 16px',
-            background: 'linear-gradient(135deg,#6366f1,#14b8a6)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
-          }}>
-            <MapPin size={24} color="white" />
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4 sm:p-6 bg-[var(--bg-app)]">
+      <div className="w-full max-w-md">
+        <Card padding="large" className="shadow-lg border-[var(--border-subtle)]">
+          {/* Logo & Heading */}
+          <div className="text-center mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-[var(--primary)] text-white flex items-center justify-center mx-auto mb-3 shadow-sm">
+              <Compass className="w-6 h-6" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)]">
+              Welcome back
+            </h1>
+            <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-1">
+              Sign in to SIH26002 NER Logistics Platform
+            </p>
           </div>
-          <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 26, color: '#f1f5f9' }}>Welcome back</h1>
-          <p style={{ color: '#475569', fontSize: 14, marginTop: 6 }}>Sign in to NER Logistics Platform</p>
-        </div>
 
-        {/* Error */}
-        {error && (
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
-            borderRadius: 10, padding: '12px 16px', marginBottom: 20
-          }}>
-            <AlertCircle size={16} color="#ef4444" />
-            <span style={{ fontSize: 14, color: '#ef4444' }}>{error}</span>
-          </div>
-        )}
+          {/* Error Alert */}
+          {error && (
+            <div className="p-3 mb-4 rounded-xl bg-[var(--risk-high-bg)] border border-[var(--risk-high-border)] flex items-center gap-2.5 text-xs text-[var(--color-danger)] font-medium">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {/* Email */}
-          <div>
-            <label className="form-label">Email Address</label>
-            <div style={{ position: 'relative' }}>
-              <Mail size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#475569' }} />
-              <input
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Input
                 id="login-email"
                 name="email"
                 type="email"
                 required
-                placeholder="you@company.com"
+                label="Email Address"
+                icon={Mail}
+                placeholder="you@agency.gov.in"
                 value={form.email}
                 onChange={handleChange}
-                className="input-field"
-                style={{ paddingLeft: 42 }}
               />
             </div>
-          </div>
 
-          {/* Password */}
-          <div>
-            <label className="form-label">Password</label>
-            <div style={{ position: 'relative' }}>
-              <Lock size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#475569' }} />
-              <input
-                id="login-password"
-                name="password"
-                type={showPwd ? 'text' : 'password'}
-                required
-                placeholder="••••••••"
-                value={form.password}
-                onChange={handleChange}
-                className="input-field"
-                style={{ paddingLeft: 42, paddingRight: 42 }}
-              />
-              <button type="button" onClick={() => setShowPwd(v => !v)} style={{
-                position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
-                background: 'none', border: 'none', cursor: 'pointer', color: '#475569', padding: 0
-              }}>
-                {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
+            <div>
+              <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1.5">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none" />
+                <input
+                  id="login-password"
+                  name="password"
+                  type={showPwd ? 'text' : 'password'}
+                  required
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={handleChange}
+                  className="w-full h-10 pl-10 pr-10 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPwd(v => !v)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                >
+                  {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
-          </div>
 
-          <button id="login-submit" type="submit" className="btn-primary" disabled={loading}
-            style={{ width: '100%', padding: '13px', fontSize: 15, opacity: loading ? 0.7 : 1 }}>
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
+            <Button
+              id="login-submit"
+              type="submit"
+              variant="primary"
+              size="lg"
+              fullWidth
+              loading={loading}
+            >
+              Sign In
+            </Button>
 
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            margin: '4px 0',
-            color: '#475569',
-            fontSize: 12
-          }}>
-            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.1)' }} />
-            <span>OR GOVERNMENT EVALUATION</span>
-            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.1)' }} />
-          </div>
+            <div className="flex items-center gap-3 my-3 text-[11px] font-semibold text-[var(--text-muted)]">
+              <div className="flex-1 h-px bg-[var(--border-subtle)]" />
+              <span>OR EVALUATION ACCESS</span>
+              <div className="flex-1 h-px bg-[var(--border-subtle)]" />
+            </div>
 
-          <button
-            id="demo-admin-login-btn"
-            type="button"
-            onClick={handleDemoAdminLogin}
-            style={{
-              width: '100%',
-              padding: '12px',
-              fontSize: 14,
-              fontWeight: 700,
-              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(20, 184, 166, 0.2))',
-              border: '1px solid rgba(99, 102, 241, 0.5)',
-              borderRadius: 10,
-              color: '#f8fafc',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(99, 102, 241, 0.25)',
-              transition: 'all 0.2s'
-            }}
-          >
-            <Building2 size={18} color="#818cf8" />
-            Quick Demo Admin Portal (SIH26002)
-          </button>
-        </form>
+            <button
+              id="demo-admin-login-btn"
+              type="button"
+              onClick={handleDemoAdminLogin}
+              className="w-full h-11 px-4 rounded-xl bg-[var(--primary-subtle)] border border-[var(--primary)]/30 text-[var(--primary)] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 hover:bg-[var(--primary)]/15 transition-all cursor-pointer shadow-xs"
+            >
+              <Building2 className="w-4 h-4" />
+              <span>Quick Demo Admin Portal (DoNER)</span>
+            </button>
+          </form>
 
-        <p style={{ textAlign: 'center', marginTop: 24, fontSize: 14, color: '#475569' }}>
-          Don't have an account?{' '}
-          <Link to="/register" style={{ color: '#6366f1', fontWeight: 600, textDecoration: 'none' }}>
-            Create account
-          </Link>
-        </p>
+          <p className="text-center mt-5 text-xs text-[var(--text-muted)]">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-[var(--primary)] font-semibold hover:underline">
+              Create account
+            </Link>
+          </p>
+        </Card>
       </div>
     </div>
   )

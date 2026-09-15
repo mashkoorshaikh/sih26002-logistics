@@ -16,6 +16,7 @@ import {
   AlertOctagon
 } from 'lucide-react'
 import alertService from '../../services/alertService'
+import { Card, Button, Badge } from '../ui'
 
 export default function RouteMonitoringPanel({
   source = 'Guwahati',
@@ -98,6 +99,7 @@ export default function RouteMonitoringPanel({
       setAlertData(nominal)
       setActiveSimulation(null)
       if (onRevertToPrimary) onRevertToPrimary()
+      setIsRerouted(false)
     } catch (err) {
       console.error('Failed to reset simulation:', err)
     } finally {
@@ -105,94 +107,54 @@ export default function RouteMonitoringPanel({
     }
   }
 
+  // Handle user clicking "Switch to safer route"
   const handleSwitchRoute = () => {
-    const targetAltId = alertData?.alternative_route?.route_id || 'alt-1'
-    onSwitchToSaferRoute(targetAltId)
-    setIsRerouted(true)
+    if (onSwitchToSaferRoute) {
+      const targetAlt = alertData?.alternative_route?.route_id || 'alt-1'
+      onSwitchToSaferRoute(targetAlt)
+      setIsRerouted(true)
+    }
   }
 
+  // Revert back to primary
   const handleRevert = () => {
-    onRevertToPrimary()
-    setIsRerouted(false)
+    if (onRevertToPrimary) {
+      onRevertToPrimary()
+      setIsRerouted(false)
+    }
   }
 
-  const hasCriticalAlert = alertData?.has_alert && alertData?.severity === 'HIGH'
+  const hasCriticalAlert = alertData && alertData.status === 'ALERT'
 
   return (
-    <div style={{
-      background: 'rgba(15, 23, 42, 0.75)',
-      backdropFilter: 'blur(16px)',
-      borderRadius: 16,
-      border: hasCriticalAlert ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
-      boxShadow: hasCriticalAlert ? '0 0 35px rgba(239, 68, 68, 0.18)' : '0 8px 32px rgba(0,0,0,0.3)',
-      padding: '20px 24px',
-      marginBottom: 24,
-      transition: 'all 0.3s ease'
-    }}>
-      {/* Top Header: Route Monitoring System Status & Demo Controls */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 14,
-        paddingBottom: 16,
-        borderBottom: '1px solid rgba(255, 255, 255, 0.07)'
-      }}>
-        {/* Monitoring Heartbeat Indicator */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{
-            position: 'relative',
-            width: 12,
-            height: 12,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            <span style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              background: hasCriticalAlert ? '#ef4444' : '#10b981',
-              opacity: 0.75,
-              animation: 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite'
-            }} />
-            <span style={{
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              background: hasCriticalAlert ? '#ef4444' : '#10b981'
-            }} />
+    <div className="bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl p-4 sm:p-5 shadow-xs space-y-4">
+      {/* Top Status & Simulation Control Hub */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-[var(--border-subtle)]">
+        <div className="flex items-center gap-3">
+          <div className="relative flex items-center justify-center w-3 h-3 flex-shrink-0">
+            <span className={`absolute w-full h-full rounded-full opacity-75 animate-ping ${hasCriticalAlert ? 'bg-[var(--color-danger)]' : 'bg-[var(--primary)]'}`} />
+            <span className={`w-2.5 h-2.5 rounded-full ${hasCriticalAlert ? 'bg-[var(--color-danger)]' : 'bg-[var(--primary)]'}`} />
           </div>
 
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: '#f8fafc', letterSpacing: 0.3 }}>
-                REAL-TIME ROUTE MONITORING:
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-bold text-[var(--text-primary)]">
+                Corridor Telemetry Monitor:
               </span>
-              <span style={{
-                fontSize: 11,
-                fontWeight: 700,
-                color: hasCriticalAlert ? '#f87171' : '#34d399',
-                background: hasCriticalAlert ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)',
-                padding: '2px 8px',
-                borderRadius: 20,
-                border: hasCriticalAlert ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(16, 185, 129, 0.3)'
-              }}>
-                {hasCriticalAlert ? 'CRITICAL RISK ESCALATION' : 'ACTIVE & NOMINAL'}
-              </span>
+              <Badge variant={hasCriticalAlert ? 'high' : 'low'} size="sm" dot>
+                {hasCriticalAlert ? 'CRITICAL ALERT' : 'ACTIVE & NOMINAL'}
+              </Badge>
             </div>
-            <span style={{ fontSize: 11, color: '#94a3b8' }}>
-              Corridor: <strong style={{ color: '#cbd5e1' }}>{source} ➔ {destination}</strong> • Polling 8 Doppler radars, IMD rainfall & highway cuts
-            </span>
+            <p className="text-[11px] text-[var(--text-secondary)] mt-0.5">
+              Corridor: <strong className="text-[var(--text-primary)]">{source} ➔ {destination}</strong> • Doppler radars, IMD rainfall & highway sensors
+            </p>
           </div>
         </div>
 
-        {/* Demo Simulation Trigger Hub */}
-        <div className="flex items-center gap-2 flex-wrap bg-[var(--bg-surface-subtle)] p-1.5 rounded-xl border border-[var(--border-subtle)]">
-          <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-1 rounded-md flex items-center gap-1.5">
-            <Zap size={14} /> SIMULATION
+        {/* Simulation Buttons */}
+        <div className="flex items-center gap-1.5 flex-wrap p-1 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
+          <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 px-2 py-0.5 flex items-center gap-1">
+            <Zap className="w-3 h-3" /> TEST
           </span>
 
           <button
@@ -200,15 +162,15 @@ export default function RouteMonitoringPanel({
             onClick={() => handleTriggerSimulation('heavy_rainfall')}
             disabled={loading}
             className={`
-              text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-2 cursor-pointer
+              text-xs font-medium px-2.5 py-1 rounded-md border transition-all flex items-center gap-1.5 cursor-pointer
               ${activeSimulation === 'heavy_rainfall'
-                ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border-sky-500/40'
-                : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-[var(--border-strong)]'
+                ? 'bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30'
+                : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
               }
             `}
           >
-            <CloudRain size={16} className="text-sky-500" />
-            Trigger Rainfall
+            <CloudRain className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+            <span>Heavy Rain</span>
           </button>
 
           <button
@@ -216,15 +178,15 @@ export default function RouteMonitoringPanel({
             onClick={() => handleTriggerSimulation('landslide_closure')}
             disabled={loading}
             className={`
-              text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-2 cursor-pointer
+              text-xs font-medium px-2.5 py-1 rounded-md border transition-all flex items-center gap-1.5 cursor-pointer
               ${activeSimulation === 'landslide_closure'
-                ? 'bg-rose-500/20 text-rose-600 dark:text-rose-300 border-rose-500/40'
-                : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-[var(--border-strong)]'
+                ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30'
+                : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
               }
             `}
           >
-            <AlertTriangle size={16} className="text-rose-500" />
-            Trigger Landslide
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+            <span>Landslide</span>
           </button>
 
           {activeSimulation && (
@@ -232,10 +194,11 @@ export default function RouteMonitoringPanel({
               type="button"
               onClick={handleResetSimulation}
               disabled={loading}
-              title="Reset to real baseline telemetry"
-              className="text-xs font-semibold px-2 py-1.5 rounded-lg bg-[var(--risk-high-bg)] border border-[var(--color-danger)]/30 text-[var(--color-danger)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--risk-high-bg)]/80"
+              title="Reset to live baseline"
+              className="text-xs font-medium px-2 py-1 rounded-md bg-[var(--risk-high-bg)] border border-[var(--risk-high-border)] text-[var(--color-danger)] flex items-center gap-1 cursor-pointer hover:opacity-80"
             >
-              <RotateCcw size={15} /> Reset
+              <RotateCcw className="w-3 h-3" />
+              <span>Reset</span>
             </button>
           )}
         </div>
@@ -243,260 +206,127 @@ export default function RouteMonitoringPanel({
 
       {/* Critical Route Risk Escalation Banner */}
       {hasCriticalAlert ? (
-        <div style={{ marginTop: 18 }}>
+        <div className="space-y-4 pt-1">
           {/* Main Alert Message */}
-          <div style={{
-            background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%)',
-            border: '1px solid rgba(239, 68, 68, 0.5)',
-            borderRadius: 12,
-            padding: '16px 20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 16,
-            flexWrap: 'wrap',
-            boxShadow: '0 4px 20px rgba(239, 68, 68, 0.15)'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              <div style={{
-                width: 44,
-                height: 44,
-                borderRadius: 12,
-                background: '#ef4444',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 0 16px rgba(239, 68, 68, 0.6)',
-                flexShrink: 0
-              }}>
-                <AlertOctagon size={24} color="#ffffff" />
+          <div className="p-4 rounded-xl border border-[var(--risk-high-border)] bg-[var(--risk-high-bg)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-[var(--color-danger)] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                <AlertOctagon className="w-5 h-5" />
               </div>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 16, fontWeight: 900, color: '#fef2f2', letterSpacing: 0.2 }}>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-bold text-[var(--color-danger)]">
                     {alertData.alert_message}
                   </span>
                   {alertData.is_simulation && (
-                    <span style={{
-                      fontSize: 10,
-                      fontWeight: 800,
-                      background: '#f59e0b',
-                      color: '#0f172a',
-                      padding: '2px 7px',
-                      borderRadius: 4,
-                      letterSpacing: 0.5
-                    }}>
-                      SIMULATED
-                    </span>
+                    <Badge variant="warning" size="sm">SIMULATED</Badge>
                   )}
                 </div>
-                <div style={{ fontSize: 13, color: '#fca5a5', marginTop: 3 }}>
+                <p className="text-xs text-[var(--text-secondary)] mt-0.5">
                   {alertData.trigger_cause}
-                </div>
+                </p>
               </div>
             </div>
 
-            {/* Reroute Status Tag */}
             {isRerouted && (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                background: 'rgba(16, 185, 129, 0.15)',
-                border: '1px solid #10b981',
-                padding: '6px 12px',
-                borderRadius: 8,
-                color: '#34d399',
-                fontSize: 12,
-                fontWeight: 700
-              }}>
-                <CheckCircle2 size={14} /> Diverted to Safer Route
-              </div>
+              <Badge variant="low" size="sm" dot>
+                Diverted to Safer Route
+              </Badge>
             )}
           </div>
 
           {/* Side-by-side Route Comparison */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: 16,
-            marginTop: 18
-          }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
             {/* CURRENT ROUTE: Risk HIGH */}
-            <div style={{
-              background: 'rgba(239, 68, 68, 0.05)',
-              border: '1px solid rgba(239, 68, 68, 0.35)',
-              borderRadius: 12,
-              padding: 16,
-              position: 'relative'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: '#f87171', letterSpacing: 0.5, textTransform: 'uppercase' }}>
+            <div className="p-4 rounded-xl border border-[var(--risk-high-border)] bg-[var(--risk-high-bg)]/40 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold tracking-wider text-[var(--color-danger)] uppercase">
                   CURRENT ROUTE
                 </span>
-                <span style={{
-                  background: '#ef4444',
-                  color: '#ffffff',
-                  fontWeight: 900,
-                  fontSize: 12,
-                  padding: '3px 10px',
-                  borderRadius: 20,
-                  boxShadow: '0 0 10px rgba(239, 68, 68, 0.5)'
-                }}>
-                  Risk: {alertData.current_route?.risk_level || 'HIGH'}
-                </span>
+                <Badge variant="danger" size="sm" dot>
+                  {alertData.current_route?.risk_level || 'HIGH'} RISK
+                </Badge>
               </div>
-
-              <h4 style={{ fontSize: 15, fontWeight: 700, color: '#f1f5f9', margin: '0 0 6px 0' }}>
+              <h4 className="text-xs font-bold text-[var(--text-primary)]">
                 {alertData.current_route?.route_name || 'NH6 Main Highway'}
               </h4>
-              <div style={{ fontSize: 12, color: '#94a3b8', marginBottom: 12 }}>
-                Distance: {alertData.current_route?.distance_km} km • Est. Time: {alertData.current_route?.duration_text}
+              <div className="text-[11px] text-[var(--text-secondary)]">
+                Distance: {alertData.current_route?.distance_km} km • Time: {alertData.current_route?.duration_text}
               </div>
-
-              <div style={{
-                background: 'rgba(0, 0, 0, 0.25)',
-                borderRadius: 8,
-                padding: '10px 12px',
-                borderLeft: '3px solid #ef4444'
-              }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#f87171', display: 'block', marginBottom: 4 }}>
-                  Detected Road & Hazard Threats:
-                </span>
-                <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: '#fecaca' }}>
+              <div className="p-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[11px] text-[var(--color-danger)]">
+                <span className="font-semibold block mb-1">Detected Hazards:</span>
+                <ul className="list-disc list-inside space-y-0.5">
                   {alertData.current_route?.key_factors?.map((f, idx) => (
-                    <li key={idx} style={{ marginBottom: 2 }}>{f}</li>
+                    <li key={idx}>{f}</li>
                   ))}
                 </ul>
               </div>
             </div>
 
             {/* ALTERNATIVE ROUTE: Risk LOW */}
-            <div style={{
-              background: 'rgba(16, 185, 129, 0.05)',
-              border: '1px solid rgba(16, 185, 129, 0.35)',
-              borderRadius: 12,
-              padding: 16,
-              position: 'relative'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: '#34d399', letterSpacing: 0.5, textTransform: 'uppercase' }}>
+            <div className="p-4 rounded-xl border border-[var(--risk-low-border)] bg-[var(--risk-low-bg)]/40 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold tracking-wider text-[var(--risk-low)] uppercase">
                   ALTERNATIVE ROUTE
                 </span>
-                <span style={{
-                  background: '#10b981',
-                  color: '#ffffff',
-                  fontWeight: 900,
-                  fontSize: 12,
-                  padding: '3px 10px',
-                  borderRadius: 20,
-                  boxShadow: '0 0 10px rgba(16, 185, 129, 0.5)'
-                }}>
-                  Risk: {alertData.alternative_route?.risk_level || 'LOW'}
-                </span>
+                <Badge variant="low" size="sm" dot>
+                  {alertData.alternative_route?.risk_level || 'LOW'} RISK
+                </Badge>
               </div>
-
-              <h4 style={{ fontSize: 15, fontWeight: 700, color: '#f1f5f9', margin: '0 0 6px 0' }}>
+              <h4 className="text-xs font-bold text-[var(--text-primary)]">
                 {alertData.alternative_route?.route_name || 'NH Secondary Valley Bypass'}
               </h4>
-              <div style={{ fontSize: 12, color: '#94a3b8', marginBottom: 12 }}>
-                Distance: {alertData.alternative_route?.distance_km} km • Est. Time: {alertData.alternative_route?.duration_text}
+              <div className="text-[11px] text-[var(--text-secondary)]">
+                Distance: {alertData.alternative_route?.distance_km} km • Time: {alertData.alternative_route?.duration_text}
               </div>
-
-              <div style={{
-                background: 'rgba(0, 0, 0, 0.25)',
-                borderRadius: 8,
-                padding: '10px 12px',
-                borderLeft: '3px solid #10b981'
-              }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#34d399', display: 'block', marginBottom: 4 }}>
-                  Verified Safety Advantages:
-                </span>
-                <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: '#d1fae5' }}>
+              <div className="p-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[11px] text-[var(--risk-low)]">
+                <span className="font-semibold block mb-1">Safety Advantages:</span>
+                <ul className="list-disc list-inside space-y-0.5">
                   {alertData.alternative_route?.key_factors?.map((f, idx) => (
-                    <li key={idx} style={{ marginBottom: 2 }}>{f}</li>
+                    <li key={idx}>{f}</li>
                   ))}
                 </ul>
               </div>
             </div>
           </div>
 
-          {/* Action Row: Switch to Safer Route Button */}
-          <div style={{
-            marginTop: 18,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            gap: 12,
-            flexWrap: 'wrap'
-          }}>
+          {/* Action Row */}
+          <div className="flex items-center justify-end gap-3 pt-2">
             {isRerouted ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 13, color: '#34d399', fontWeight: 600 }}>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-[var(--risk-low)] font-semibold">
                   ✓ Switched to {alertData.alternative_route?.route_name}
                 </span>
-                <button
-                  type="button"
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={handleRevert}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#cbd5e1',
-                    borderRadius: 10,
-                    padding: '8px 14px',
-                    fontSize: 12,
-                    cursor: 'pointer'
-                  }}
                 >
                   Revert to Primary Route
-                </button>
+                </Button>
               </div>
             ) : (
-              <button
-                type="button"
+              <Button
+                variant="primary"
+                size="md"
                 id="btn-switch-safer-route"
                 onClick={handleSwitchRoute}
-                style={{
-                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: 10,
-                  padding: '12px 24px',
-                  fontSize: 14,
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  boxShadow: '0 4px 18px rgba(16, 185, 129, 0.4)',
-                  transition: 'transform 0.15s'
-                }}
-                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
-                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                icon={ShieldCheck}
+                iconRight={ArrowRight}
               >
-                <ShieldCheck size={18} />
                 Switch to safer route
-                <ArrowRight size={16} />
-              </button>
+              </Button>
             )}
           </div>
         </div>
       ) : (
-        /* Nominal State Message */
-        <div style={{
-          marginTop: 12,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          fontSize: 12,
-          color: '#94a3b8'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <CheckCircle2 size={15} color="#10b981" />
+        <div className="flex items-center justify-between text-xs text-[var(--text-secondary)] pt-1 flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
             <span>Active corridor currently operating under verified safe thresholds.</span>
           </div>
-          <span style={{ fontSize: 11, color: '#64748b' }}>
-            Click simulation buttons above to test dynamic route risk escalation.
+          <span className="text-[11px] text-[var(--text-muted)]">
+            Click test buttons above to simulate rainfall or landslide disruption.
           </span>
         </div>
       )}

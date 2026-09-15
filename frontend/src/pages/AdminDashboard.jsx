@@ -408,8 +408,10 @@ export default function AdminDashboard() {
     return true
   })
 
+  const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
+
   return (
-    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '26px 32px' }}>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Top Masthead: Ministry / Authority Header */}
       <div className="glass-card" style={{
         padding: '20px 26px',
@@ -812,10 +814,12 @@ export default function AdminDashboard() {
           <MapContainer
             center={[25.8, 92.8]}
             zoom={7}
-            style={{ width: '100%', height: '100%', background: '#090d16' }}
+            style={{ width: '100%', height: '100%', background: 'var(--bg-surface-subtle)' }}
           >
             <TileLayer
-              url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+              url={isDark
+                ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'}
               attribution='&copy; CARTO'
               maxZoom={19}
             />

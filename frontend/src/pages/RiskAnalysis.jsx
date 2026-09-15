@@ -15,6 +15,7 @@ import {
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts'
+import { PageHeader, Card, Badge, StatCard } from '../components/ui'
 
 // Elevation and slope profile for Guwahati ➔ Shillong
 const ELEVATION_PROFILE = [
@@ -30,204 +31,172 @@ const ELEVATION_PROFILE = [
 ]
 
 const ML_FEATURE_IMPORTANCE = [
-  { feature: 'Precipitation & Rain Saturation', importance: 32, color: '#38bdf8' },
-  { feature: 'Mountain Slope Gradient',        importance: 26, color: '#818cf8' },
-  { feature: 'Road Surface & Cut Quality',     importance: 18, color: '#2dd4bf' },
-  { feature: 'Atmospheric Fog / Visibility',   importance: 12, color: '#facc15' },
-  { feature: 'Elevation Variance (m)',         importance: 8,  color: '#fb923c' },
-  { feature: 'Traffic Density & Congestion',    importance: 4,  color: '#f87171' },
+  { feature: 'Precipitation & Rain Saturation', importance: 32, color: '#0284c7' },
+  { feature: 'Mountain Slope Gradient',        importance: 26, color: '#16845B' },
+  { feature: 'Road Surface & Cut Quality',     importance: 18, color: '#0d9488' },
+  { feature: 'Atmospheric Fog / Visibility',   importance: 12, color: '#eab308' },
+  { feature: 'Elevation Variance (m)',         importance: 8,  color: '#f97316' },
+  { feature: 'Traffic Density & Congestion',    importance: 4,  color: '#ef4444' },
 ]
 
 export default function RiskAnalysis() {
   const [selectedCorridor, setSelectedCorridor] = useState('Guwahati ➔ Shillong (NH6)')
 
   return (
-    <div style={{ maxWidth: 1400, margin: '0 auto', padding: '28px 32px' }}>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Page Header */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-          <ShieldAlert size={20} color="#ef4444" />
-          <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 24, color: 'var(--text-primary)', margin: 0 }}>
-            Machine Learning Route Risk Assessment
-          </h2>
-        </div>
-        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
-          Trained Random Forest Classifier (100 estimators) predicting dynamic terrain failure, landslide probability, and monsoon risk.
-        </p>
-      </div>
+      <PageHeader
+        title="Machine Learning Route Risk Assessment"
+        subtitle="Trained Random Forest Classifier (100 estimators) predicting dynamic terrain failure, landslide probability, and monsoon risk."
+        breadcrumb={[
+          { label: 'Logistics', to: '/dashboard' },
+          { label: 'Risk Analysis' }
+        ]}
+        badge={
+          <Badge variant="low" size="sm" dot>
+            ML Model Online
+          </Badge>
+        }
+      />
 
       {/* Top Risk Score Summary Cards */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: 16,
-        marginBottom: 28
-      }}>
-        <div className="glass-card" style={{ padding: 20 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Composite Risk Score
-          </span>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 8 }}>
-            <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 36, color: '#34d399', lineHeight: 1 }}>
-              22.5
-            </span>
-            <span style={{ fontSize: 13, color: '#64748b' }}>/ 100</span>
-          </div>
-          <span style={{
-            display: 'inline-block',
-            marginTop: 8,
-            fontSize: 11,
-            fontWeight: 800,
-            background: 'rgba(16, 185, 129, 0.15)',
-            color: '#34d399',
-            padding: '2px 8px',
-            borderRadius: 6
-          }}>
-            LEVEL: LOW RISK
-          </span>
-        </div>
-
-        <div className="glass-card" style={{ padding: 20 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            ML Model Confidence
-          </span>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 8 }}>
-            <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 36, color: '#818cf8', lineHeight: 1 }}>
-              94.2%
-            </span>
-          </div>
-          <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 8 }}>
-            Validated cross-entropy loss
-          </div>
-        </div>
-
-        <div className="glass-card" style={{ padding: 20 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Max Slope Gradient
-          </span>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 8 }}>
-            <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 36, color: '#facc15', lineHeight: 1 }}>
-              11.2%
-            </span>
-          </div>
-          <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 8 }}>
-            Mawlai mountain cutting
-          </div>
-        </div>
-
-        <div className="glass-card" style={{ padding: 20 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Critical Segments
-          </span>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 8 }}>
-            <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 36, color: '#34d399', lineHeight: 1 }}>
-              0 / 8
-            </span>
-          </div>
-          <div style={{ fontSize: 12, color: '#34d399', marginTop: 8 }}>
-            All segments nominal
-          </div>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="Composite Risk Score"
+          value="22.5 / 100"
+          change="LEVEL: LOW RISK"
+          changeType="positive"
+          icon={ShieldCheck}
+        />
+        <StatCard
+          title="ML Model Confidence"
+          value="94.2%"
+          change="Validated cross-entropy loss"
+          changeType="neutral"
+          icon={TrendingUp}
+        />
+        <StatCard
+          title="Max Slope Gradient"
+          value="11.2%"
+          change="Mawlai mountain cutting"
+          changeType="warning"
+          icon={Mountain}
+        />
+        <StatCard
+          title="Critical Segments"
+          value="0 / 8"
+          change="All segments nominal"
+          changeType="positive"
+          icon={CheckCircle2}
+        />
       </div>
 
       {/* Elevation & Mountain Gradient Chart */}
-      <div className="glass-card" style={{ padding: 24, marginBottom: 28 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+      <Card padding="default">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+            <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] leading-tight">
               Corridor Elevation & Terrain Cross-Section (Guwahati ➔ Shillong)
             </h3>
-            <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '2px 0 0 0' }}>
+            <p className="text-xs text-[var(--text-muted)] mt-0.5">
               Elevation increases from 55m (Brahmaputra Valley) to 1,525m (Khasi Hills Plateau)
             </p>
           </div>
-          <span style={{ fontSize: 12, color: '#6366f1', fontWeight: 600 }}>Total Climb: +1,470m</span>
+          <span className="text-xs text-[var(--primary)] font-bold">
+            Total Climb: +1,470m
+          </span>
         </div>
 
-        <div style={{ height: 260 }}>
+        <div className="h-64 sm:h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={ELEVATION_PROFILE}>
               <defs>
                 <linearGradient id="elevationGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#14b8a6" stopOpacity={0.5}/>
-                  <stop offset="95%" stopColor="#14b8a6" stopOpacity={0.05}/>
+                  <stop offset="5%" stopColor="#16845B" stopOpacity={0.4}/>
+                  <stop offset="95%" stopColor="#16845B" stopOpacity={0.02}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
               <XAxis dataKey="km" unit=" km" stroke="var(--text-muted)" fontSize={11} />
               <YAxis unit="m" stroke="var(--text-muted)" fontSize={11} />
               <Tooltip
-                contentStyle={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 12, color: 'var(--text-primary)' }}
+                contentStyle={{
+                  background: 'var(--bg-surface)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 10,
+                  fontSize: 12,
+                  color: 'var(--text-primary)',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)'
+                }}
                 formatter={(val, name) => [name === 'elevation' ? `${val} m` : `${val}%`, name === 'elevation' ? 'Elevation' : 'Slope']}
                 labelFormatter={(label) => `Checkpoint at km ${label}`}
               />
-              <Area type="monotone" dataKey="elevation" stroke="#14b8a6" strokeWidth={2} fillOpacity={1} fill="url(#elevationGrad)" name="elevation" />
+              <Area type="monotone" dataKey="elevation" stroke="#16845B" strokeWidth={2.5} fillOpacity={1} fill="url(#elevationGrad)" name="elevation" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </Card>
 
       {/* Feature Importance & Segment Breakdown */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 20 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Feature Importance */}
-        <div className="glass-card" style={{ padding: 22 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 14 }}>
+        <Card padding="default">
+          <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] mb-4">
             Random Forest Feature Importance Weights
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className="space-y-3">
             {ML_FEATURE_IMPORTANCE.map(f => (
               <div key={f.feature}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
-                  <span style={{ color: 'var(--text-secondary)' }}>{f.feature}</span>
-                  <span style={{ fontWeight: 700, color: f.color }}>{f.importance}%</span>
+                <div className="flex justify-between text-xs mb-1.5">
+                  <span className="text-[var(--text-secondary)] font-medium">{f.feature}</span>
+                  <span className="font-bold text-[var(--text-primary)]">{f.importance}%</span>
                 </div>
-                <div style={{ height: 6, width: '100%', background: 'var(--border-subtle)', borderRadius: 3, overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: `${f.importance}%`, background: f.color, borderRadius: 3 }} />
+                <div className="h-2 w-full bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-300"
+                    style={{ width: `${f.importance}%`, backgroundColor: f.color }}
+                  />
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* Checkpoint Risk Table */}
-        <div className="glass-card" style={{ padding: 22 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 14 }}>
+        <Card padding="default">
+          <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] mb-4">
             Key Mountain Checkpoints & Risk Ratings
           </h3>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+          <div className="overflow-x-auto no-scrollbar">
+            <table className="w-full text-xs text-left">
               <thead>
-                <tr style={{ borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-muted)', textAlign: 'left' }}>
-                  <th style={{ padding: '8px 6px' }}>Checkpoint</th>
-                  <th style={{ padding: '8px 6px' }}>Elev</th>
-                  <th style={{ padding: '8px 6px' }}>Slope</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'right' }}>Risk Score</th>
+                <tr className="border-b border-[var(--border-subtle)] text-[var(--text-muted)] font-semibold">
+                  <th className="py-2.5 px-2">Checkpoint</th>
+                  <th className="py-2.5 px-2">Elev</th>
+                  <th className="py-2.5 px-2">Slope</th>
+                  <th className="py-2.5 px-2 text-right">Risk Score</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-[var(--border-subtle)]">
                 {ELEVATION_PROFILE.map(p => (
-                  <tr key={p.km} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td style={{ padding: '8px 6px', color: '#f1f5f9', fontWeight: 600 }}>{p.location}</td>
-                    <td style={{ padding: '8px 6px', color: '#94a3b8' }}>{p.elevation}m</td>
-                    <td style={{ padding: '8px 6px', color: '#facc15' }}>{p.slope}%</td>
-                    <td style={{ padding: '8px 6px', textAlign: 'right' }}>
-                      <span style={{
-                        background: p.risk < 25 ? 'rgba(16, 185, 129, 0.15)' : p.risk < 35 ? 'rgba(234, 179, 8, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                        color: p.risk < 25 ? '#34d399' : p.risk < 35 ? '#facc15' : '#f87171',
-                        padding: '2px 6px',
-                        borderRadius: 4,
-                        fontSize: 11,
-                        fontWeight: 700
-                      }}>
+                  <tr key={p.km} className="hover:bg-[var(--bg-surface-subtle)] transition-colors">
+                    <td className="py-2.5 px-2 text-[var(--text-primary)] font-medium">{p.location}</td>
+                    <td className="py-2.5 px-2 text-[var(--text-secondary)]">{p.elevation}m</td>
+                    <td className="py-2.5 px-2 text-amber-600 dark:text-amber-400 font-semibold">{p.slope}%</td>
+                    <td className="py-2.5 px-2 text-right">
+                      <Badge
+                        variant={p.risk < 25 ? 'low' : p.risk < 35 ? 'medium' : 'high'}
+                        size="sm"
+                      >
                         {p.risk} / 100
-                      </span>
+                      </Badge>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   )

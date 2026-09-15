@@ -12,9 +12,9 @@ export function Badge({
   className = '',
 }) {
   const sizeStyles = {
-    sm: 'text-[10px] px-1.5 py-0.5 rounded',
-    md: 'text-xs px-2 py-0.5 rounded-md',
-    lg: 'text-xs font-semibold px-2.5 py-1 rounded-md',
+    sm: 'text-[10px] px-2 py-0.5 rounded-md font-semibold',
+    md: 'text-xs px-2.5 py-1 rounded-md font-medium',
+    lg: 'text-xs px-3 py-1.5 rounded-lg font-semibold',
   }
 
   const variantStyles = {
@@ -24,7 +24,7 @@ export function Badge({
     success: 'bg-[var(--risk-low-bg)] text-[var(--risk-low)] border border-[var(--risk-low-border)]',
     warning: 'bg-[var(--risk-med-bg)] text-[var(--risk-med)] border border-[var(--risk-med-border)]',
     danger: 'bg-[var(--risk-high-bg)] text-[var(--risk-high)] border border-[var(--risk-high-border)]',
-    brand: 'bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]/20',
+    brand: 'bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]/25',
     neutral: 'bg-[var(--bg-surface-subtle)] text-[var(--text-secondary)] border border-[var(--border-subtle)]',
   }
 
@@ -42,7 +42,7 @@ export function Badge({
   return (
     <span
       className={`
-        inline-flex items-center gap-1.5 font-medium select-none
+        inline-flex items-center gap-1.5 select-none tracking-tight
         ${sizeStyles[size] || sizeStyles.md}
         ${variantStyles[variant] || variantStyles.neutral}
         ${className}

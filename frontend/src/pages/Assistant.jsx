@@ -196,19 +196,18 @@ export default function Assistant() {
             <span className="font-bold text-[var(--text-primary)]">{source} ➔ {destination}</span>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
             <Select
               value={source}
               onChange={e => setSource(e.target.value)}
-              className="w-32 !py-1"
+              className="w-full sm:w-32 !py-1 text-xs"
             >
               {NER_CITIES.map(c => <option key={c} value={c}>{c}</option>)}
             </Select>
-            <span className="text-[var(--text-muted)]">➔</span>
             <Select
               value={destination}
               onChange={e => setDestination(e.target.value)}
-              className="w-32 !py-1"
+              className="w-full sm:w-32 !py-1 text-xs"
             >
               {NER_CITIES.filter(c => c !== source).map(c => <option key={c} value={c}>{c}</option>)}
             </Select>
@@ -216,7 +215,7 @@ export default function Assistant() {
             <Select
               value={vehicleType}
               onChange={e => setVehicleType(e.target.value)}
-              className="w-44 !py-1"
+              className="col-span-2 sm:col-span-1 w-full sm:w-48 !py-1 text-xs"
             >
               {VEHICLE_OPTIONS.map(v => <option key={v.value} value={v.value}>{v.label}</option>)}
             </Select>
@@ -225,7 +224,7 @@ export default function Assistant() {
       </Card>
 
       {/* ─── CHAT CONVERSATION WORKSPACE ──────────────────────────────────── */}
-      <Card padding="default" className="flex flex-col h-[520px] shadow-xs">
+      <Card padding="default" className="flex flex-col h-[520px] sm:h-[580px] shadow-xs">
         {/* Messages Scroll Area */}
         <div className="flex-1 overflow-y-auto space-y-4 pr-2 pb-4">
           {messages.map((m, idx) => {

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Route, Navigation, Sparkles, MapPin, Compass } from 'lucide-react'
+import { Route, Navigation, Sparkles, MapPin, Compass, CheckCircle2 } from 'lucide-react'
 import RouteMap from '../components/map/RouteMap'
 import RoutePlannerForm from '../components/routes/RoutePlannerForm'
 import RouteResults from '../components/routes/RouteResults'
 import RouteMonitoringPanel from '../components/alerts/RouteMonitoringPanel'
 import routeService from '../services/routeService'
-import { PageHeader, Card } from '../components/ui'
+import { PageHeader, Card, Badge } from '../components/ui'
 
 export default function RoutePlanning() {
   const [routeData, setRouteData] = useState(null)
@@ -43,17 +43,17 @@ export default function RoutePlanning() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-      {/* Page Header */}
+      {/* ─── PAGE HEADER ─────────────────────────────────────────────────── */}
       <PageHeader
         title="Interactive Route Planning"
-        subtitle="Multi-objective path optimization across the North Eastern Region balancing mountain hazards, fuel economy, and bridge clearances."
+        subtitle="Multi-objective path optimization across Northeast India balancing mountain hazards, fuel economy, and bridge physical clearances."
         breadcrumb={[
           { label: 'Logistics', to: '/dashboard' },
           { label: 'Route Planning' }
         ]}
       />
 
-      {/* Real-time Route Diversion Simulator Panel (Phase 12) */}
+      {/* ─── REAL-TIME ROUTE DIVERSION SIMULATOR PANEL ───────────────────── */}
       <RouteMonitoringPanel
         source={routeData?.source?.name || 'Guwahati'}
         destination={routeData?.destination?.name || 'Shillong'}
@@ -63,9 +63,9 @@ export default function RoutePlanning() {
         onRevertToPrimary={() => setSelectedAltId(null)}
       />
 
-      {/* ─── PROFESSIONAL SPLIT LAYOUT (Section 8) ────────────────────────── */}
+      {/* ─── DESKTOP SPLIT LAYOUT / MOBILE SEQUENCED FLOW ────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT COLUMN: Route Planning Controls (5 of 12 cols) */}
+        {/* LEFT COLUMN: Route Parameters Form (5 of 12 cols on desktop) */}
         <div className="lg:col-span-5 space-y-4">
           <RoutePlannerForm
             onSubmit={handleCalculateRoute}
@@ -74,29 +74,34 @@ export default function RoutePlanning() {
           />
         </div>
 
-        {/* RIGHT COLUMN: Interactive GIS Map (7 of 12 cols) */}
+        {/* RIGHT COLUMN: Interactive GIS Map (7 of 12 cols on desktop) */}
         <div className="lg:col-span-7">
-          <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden shadow-xs sticky top-20">
+          <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden shadow-xs lg:sticky lg:top-20">
             <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
               <div className="flex items-center gap-2">
                 <Compass className="w-4 h-4 text-[var(--primary)]" />
                 <span className="text-xs font-bold text-[var(--text-primary)]">
-                  Carto Mountain GIS • Elevation & Segment Hazards
+                  Carto Mountain GIS • Elevation & Hazards
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-[11px] text-[var(--text-muted)]">
-                <span>Green: Primary</span>
+              <div className="flex items-center gap-2 text-[11px] text-[var(--text-secondary)]">
+                <span className="inline-flex items-center gap-1 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-[var(--primary)]" /> Primary
+                </span>
                 <span>•</span>
-                <span>Amber/Red: Alternative</span>
+                <span className="inline-flex items-center gap-1 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-amber-500" /> Alternative
+                </span>
               </div>
             </div>
 
-            <div className="h-[520px] w-full relative">
+            {/* Responsive map container: 340px on mobile, 420px on tablet, 540px on desktop */}
+            <div className="h-[340px] sm:h-[420px] lg:h-[540px] w-full relative">
               <RouteMap
                 routeData={routeData}
                 selectedAltId={selectedAltId}
                 onSelectAlternative={setSelectedAltId}
-                height="520px"
+                height="100%"
               />
             </div>
           </div>
@@ -105,7 +110,7 @@ export default function RoutePlanning() {
 
       {/* ─── RESULTS & ALTERNATIVES COMPARISON SECTION ───────────────────── */}
       {routeData && (
-        <div className="pt-4">
+        <div className="pt-2">
           <RouteResults
             routeData={routeData}
             selectedAltId={selectedAltId}

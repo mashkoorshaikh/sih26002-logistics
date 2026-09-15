@@ -136,14 +136,14 @@ export default function AlertsPage() {
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0 no-scrollbar">
             {['ALL', 'UNREAD', 'HIGH', 'MEDIUM', 'LOW'].map(f => (
               <button
                 key={f}
                 type="button"
                 onClick={() => setActiveFilter(f)}
                 className={`
-                  text-xs font-semibold px-2.5 py-1 rounded-md transition-all
+                  text-xs font-semibold px-2.5 py-1 rounded-md transition-all whitespace-nowrap cursor-pointer
                   ${activeFilter === f
                     ? 'bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]/30'
                     : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-subtle)] border border-transparent'
@@ -197,25 +197,27 @@ export default function AlertsPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 sm:self-center flex-shrink-0">
+              <div className="flex items-center justify-between sm:justify-end gap-2 sm:self-center flex-shrink-0 pt-2.5 sm:pt-0 border-t sm:border-t-0 border-[var(--border-subtle)] w-full sm:w-auto">
                 <span className="text-[11px] text-[var(--text-muted)]">{item.time}</span>
-                {item.unread && (
+                <div className="flex items-center gap-2">
+                  {item.unread && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleMarkAsRead(item.id)}
+                    >
+                      Mark read
+                    </Button>
+                  )}
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
-                    onClick={() => handleMarkAsRead(item.id)}
+                    icon={Route}
+                    onClick={() => navigate('/plan')}
                   >
-                    Mark read
+                    View route
                   </Button>
-                )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  icon={Route}
-                  onClick={() => navigate('/plan')}
-                >
-                  View route
-                </Button>
+                </div>
               </div>
             </div>
           ))}

@@ -15,18 +15,18 @@ import {
   Activity,
   CheckCircle2,
   Navigation,
-  DollarSign,
   Plus,
   Loader2,
-  Radio
+  Radio,
+  Compass
 } from 'lucide-react'
 import {
-  AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend
+  AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts'
 import { useAuthStore } from '../store/authStore'
 import RouteMap from '../components/map/RouteMap'
 import routeService from '../services/routeService'
-import { monthlyTrends, riskDistribution, stateTrips } from '../data/analyticsData'
+import { monthlyTrends, riskDistribution } from '../data/analyticsData'
 import { Card, CardHeader, StatCard, Button, Badge } from '../components/ui'
 
 // Top active monitored logistics corridors across the 8 NER states
@@ -97,7 +97,7 @@ export default function Dashboard() {
   const [selectedCorridor, setSelectedCorridor] = useState(ACTIVE_CORRIDORS[0])
   const routeCacheRef = useRef({})
 
-  // Current formatted date for the top greeting
+  // Formatted date for header
   const todayFormatted = new Date().toLocaleDateString('en-IN', {
     weekday: 'long',
     day: 'numeric',
@@ -184,27 +184,27 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-      {/* ─── TOP GREETING & PRIMARY ACTION ─────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
+      {/* ─── TOP PAGE TITLE, DESCRIPTION & PRIMARY ACTION ─────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-[var(--border-subtle)]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             <span className="text-xs font-semibold text-[var(--primary)] uppercase tracking-wider">
-              Northeast Logistics Operations
+              Operations Center
             </span>
             <span className="text-[var(--text-muted)]">•</span>
             <span className="text-xs text-[var(--text-muted)]">{todayFormatted}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-primary)]">
-            Welcome back, {user?.full_name?.split(' ')[0] || 'Controller'}
+            Welcome back, {user?.full_name?.split(' ')[0] || 'Officer'}
           </h1>
-          <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-0.5">
-            Operational status: All 8 NER state arteries monitored • Google OR-Tools routing engine live.
+          <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-1 max-w-2xl leading-relaxed">
+            Real-time corridor telemetry, mountain hazard tracking, and multi-objective route optimization across Northeast India.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 flex-shrink-0">
+        <div className="flex items-center gap-3 flex-shrink-0">
           <Button
-            variant="outline"
+            variant="secondary"
             size="md"
             icon={Navigation}
             onClick={() => navigate('/trips')}
@@ -223,8 +223,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* ─── COMPACT KPI STAT CARDS (Section 7) ───────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      {/* ─── 4 KPI CARDS (4 cols desktop, 2 tablet, 1-2 mobile) ───────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
         <StatCard
           title="Total Trips"
           value="1,284"
@@ -239,7 +239,7 @@ export default function Dashboard() {
           value="48"
           change="4 En Route"
           changeType="positive"
-          subtitle="Multi-axle & reefers"
+          subtitle="Multi-axle & cold-chain reefers"
           icon={Truck}
         />
 
@@ -262,21 +262,23 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* ─── CORRIDOR MONITORING & MAP SPLIT ──────────────────────────────── */}
+      {/* ─── CORRIDOR MONITORING & MAP SPLIT (35% / 65%) ──────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        {/* Monitored Corridors List (5 cols) */}
+        {/* Monitored Corridors List (4 of 12 cols on desktop) */}
         <div className="lg:col-span-5 space-y-3">
           <Card padding="sm">
             <div className="flex items-center justify-between mb-3 px-1">
               <div>
-                <h3 className="text-sm font-bold text-[var(--text-primary)]">
+                <h2 className="text-sm font-bold text-[var(--text-primary)]">
                   Active Monitored Corridors
-                </h3>
-                <p className="text-xs text-[var(--text-muted)]">
-                  Click a corridor to preview real-time geometry & terrain
+                </h2>
+                <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+                  Select a corridor to preview real-time geometry & terrain
                 </p>
               </div>
-              <Badge variant="brand" size="sm">Live</Badge>
+              <Badge variant="brand" size="sm" dot>
+                Live
+              </Badge>
             </div>
 
             <div className="space-y-2">
@@ -292,7 +294,7 @@ export default function Dashboard() {
                       p-3 rounded-xl border transition-all duration-150 cursor-pointer select-none
                       ${isSelected
                         ? 'bg-[var(--primary-subtle)] border-[var(--primary)] shadow-xs'
-                        : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] hover:border-[var(--border-strong)]'
+                        : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-subtle)]'
                       }
                     `}
                   >
@@ -322,7 +324,7 @@ export default function Dashboard() {
             </div>
 
             <div className="mt-4 pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between px-1">
-              <span className="text-xs text-[var(--text-muted)]">Looking for custom waypoints?</span>
+              <span className="text-xs text-[var(--text-secondary)]">Need custom waypoints?</span>
               <Button
                 variant="ghost"
                 size="sm"
@@ -335,7 +337,7 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Corridor Map Preview (7 cols) */}
+        {/* Corridor Map Preview (7 of 12 cols on desktop) */}
         <div className="lg:col-span-7">
           <Card padding="none" className="overflow-hidden border border-[var(--border-subtle)]">
             <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
@@ -357,17 +359,17 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="h-[380px] w-full relative">
+            <div className="h-[360px] sm:h-[420px] w-full relative">
               <RouteMap
                 routeData={routeData}
-                height="380px"
+                height="100%"
               />
             </div>
           </Card>
         </div>
       </div>
 
-      {/* ─── REGIONAL TRENDS & ANALYTICS PREVIEW ─────────────────────────── */}
+      {/* ─── REGIONAL TRENDS & ANALYTICS (2 Columns Desktop, 1 Column Mobile) ─ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <Card padding="default">
           <CardHeader
@@ -389,8 +391,8 @@ export default function Dashboard() {
               <AreaChart data={monthlyTrends}>
                 <defs>
                   <linearGradient id="colorTrips" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#059669" stopOpacity={0.25}/>
-                    <stop offset="95%" stopColor="#059669" stopOpacity={0.0}/>
+                    <stop offset="5%" stopColor="#16845B" stopOpacity={0.25}/>
+                    <stop offset="95%" stopColor="#16845B" stopOpacity={0.0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
@@ -402,10 +404,11 @@ export default function Dashboard() {
                     borderColor: 'var(--border-subtle)',
                     borderRadius: '8px',
                     fontSize: '12px',
-                    color: 'var(--text-primary)'
+                    color: 'var(--text-primary)',
+                    boxShadow: 'var(--shadow-sm)'
                   }}
                 />
-                <Area type="monotone" dataKey="trips" stroke="#059669" strokeWidth={2} fillOpacity={1} fill="url(#colorTrips)" name="Freight Tonnes" />
+                <Area type="monotone" dataKey="trips" stroke="#16845B" strokeWidth={2} fillOpacity={1} fill="url(#colorTrips)" name="Freight Tonnes" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -438,10 +441,11 @@ export default function Dashboard() {
                     borderColor: 'var(--border-subtle)',
                     borderRadius: '8px',
                     fontSize: '12px',
-                    color: 'var(--text-primary)'
+                    color: 'var(--text-primary)',
+                    boxShadow: 'var(--shadow-sm)'
                   }}
                 />
-                <Bar dataKey="routes" fill="#0d9488" radius={[6, 6, 0, 0]} name="Monitored Corridors" />
+                <Bar dataKey="routes" fill="#2FA36F" radius={[6, 6, 0, 0]} name="Monitored Corridors" />
               </BarChart>
             </ResponsiveContainer>
           </div>

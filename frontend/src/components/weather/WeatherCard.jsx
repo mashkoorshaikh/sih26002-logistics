@@ -63,7 +63,7 @@ export default function WeatherCard({ weatherData }) {
         </div>
 
         {/* Risk Score Pill & Bar */}
-        <div className="flex flex-col items-end gap-1.5">
+        <div className="flex flex-col items-start sm:items-end gap-1.5">
           <div
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg font-bold text-xs shadow-xs"
             style={{

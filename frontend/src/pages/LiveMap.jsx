@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Map,
+  Map as MapIcon,
   Layers,
   Hospital,
   Fuel,
@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import RouteMap from '../components/map/RouteMap'
 import routeService from '../services/routeService'
+import { Badge, Select } from '../components/ui'
 
 const CORRIDORS = [
   { source: 'Guwahati', destination: 'Shillong', label: 'Guwahati ➔ Shillong (NH6)' },
@@ -63,55 +64,32 @@ export default function LiveMap() {
   }, [selectedCorridor])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)' }}>
+    <div className="flex flex-col h-[calc(100vh-64px)] w-full overflow-hidden bg-[var(--bg-app)]">
       {/* Top Floating Controls Bar */}
-      <div style={{
-        padding: '14px 24px',
-        background: 'rgba(10, 15, 30, 0.9)',
-        backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 14,
-        zIndex: 20
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{
-            width: 34, height: 34, borderRadius: 8,
-            background: 'rgba(99, 102, 241, 0.2)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
-          }}>
-            <Map size={18} color="#818cf8" />
+      <div className="px-4 sm:px-6 py-3 bg-[var(--bg-surface)]/95 backdrop-blur-md border-b border-[var(--border-subtle)] flex items-center justify-between flex-wrap gap-3 z-20 shadow-xs">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-[var(--primary-subtle)] text-[var(--primary)] flex items-center justify-center flex-shrink-0 shadow-xs">
+            <MapIcon className="w-4 h-4" />
           </div>
           <div>
-            <h2 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+            <h2 className="text-sm sm:text-base font-bold text-[var(--text-primary)] leading-tight">
               Live GIS Mountain Logistics Map
             </h2>
-            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-              Leaflet Cartography with Satellite Telemetry
+            <span className="text-[11px] text-[var(--text-muted)]">
+              Leaflet Cartography • High-Altitude Satellite & Lifeline Telemetry
             </span>
           </div>
         </div>
 
-        {/* Corridor Picker */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+        {/* Corridor Picker & Layers */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <select
             value={selectedCorridor.source}
             onChange={e => {
               const match = CORRIDORS.find(c => c.source === e.target.value)
               if (match) setSelectedCorridor(match)
             }}
-            style={{
-              padding: '7px 12px',
-              borderRadius: 8,
-              background: 'var(--bg-surface-subtle)',
-              border: '1px solid var(--border-subtle)',
-              color: 'var(--text-primary)',
-              fontSize: 12,
-              outline: 'none'
-            }}
+            className="h-8 px-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-xs font-semibold outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] cursor-pointer"
           >
             {CORRIDORS.map(c => (
               <option key={c.source} value={c.source}>{c.label}</option>
@@ -119,53 +97,44 @@ export default function LiveMap() {
           </select>
 
           {/* Layer Filter Toggles */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255, 255, 255, 0.04)', padding: '3px 8px', borderRadius: 8 }}>
-            <span style={{ fontSize: 11, color: '#64748b', fontWeight: 600 }}>LAYERS:</span>
+          <div className="flex items-center gap-1.5 p-1 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
+            <span className="text-[10px] text-[var(--text-muted)] font-bold px-1.5 hidden sm:inline">LAYERS:</span>
             <button
               type="button"
               onClick={() => setLayers(l => ({ ...l, hospitals: !l.hospitals }))}
-              style={{
-                background: layers.hospitals ? 'rgba(244, 63, 94, 0.2)' : 'transparent',
-                border: layers.hospitals ? '1px solid #f43f5e' : '1px solid rgba(255,255,255,0.08)',
-                color: layers.hospitals ? '#f43f5e' : '#64748b',
-                padding: '3px 8px',
-                borderRadius: 6,
-                fontSize: 11,
-                cursor: 'pointer',
-                fontWeight: 600
-              }}
+              className={`
+                text-[11px] font-semibold px-2 py-1 rounded-md border transition-all cursor-pointer
+                ${layers.hospitals
+                  ? 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/30'
+                  : 'bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-secondary)]'
+                }
+              `}
             >
               🏥 Hospitals
             </button>
             <button
               type="button"
               onClick={() => setLayers(l => ({ ...l, fuel: !l.fuel }))}
-              style={{
-                background: layers.fuel ? 'rgba(234, 179, 8, 0.2)' : 'transparent',
-                border: layers.fuel ? '1px solid #eab308' : '1px solid rgba(255,255,255,0.08)',
-                color: layers.fuel ? '#facc15' : '#64748b',
-                padding: '3px 8px',
-                borderRadius: 6,
-                fontSize: 11,
-                cursor: 'pointer',
-                fontWeight: 600
-              }}
+              className={`
+                text-[11px] font-semibold px-2 py-1 rounded-md border transition-all cursor-pointer
+                ${layers.fuel
+                  ? 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30'
+                  : 'bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-secondary)]'
+                }
+              `}
             >
-              ⛽ Fuel Hubs
+              ⛽ Fuel
             </button>
             <button
               type="button"
               onClick={() => setLayers(l => ({ ...l, repairs: !l.repairs }))}
-              style={{
-                background: layers.repairs ? 'rgba(20, 184, 166, 0.2)' : 'transparent',
-                border: layers.repairs ? '1px solid #14b8a6' : '1px solid rgba(255,255,255,0.08)',
-                color: layers.repairs ? '#2dd4bf' : '#64748b',
-                padding: '3px 8px',
-                borderRadius: 6,
-                fontSize: 11,
-                cursor: 'pointer',
-                fontWeight: 600
-              }}
+              className={`
+                text-[11px] font-semibold px-2 py-1 rounded-md border transition-all cursor-pointer
+                ${layers.repairs
+                  ? 'bg-teal-500/15 text-teal-700 dark:text-teal-400 border-teal-500/30'
+                  : 'bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-secondary)]'
+                }
+              `}
             >
               🔧 Repairs
             </button>
@@ -174,7 +143,7 @@ export default function LiveMap() {
       </div>
 
       {/* Main Fullscreen Map Container */}
-      <div style={{ flex: 1, position: 'relative' }}>
+      <div className="flex-1 relative w-full h-full min-h-0">
         <RouteMap
           routeData={routeData}
           selectedAltId={selectedAltId}
@@ -184,38 +153,19 @@ export default function LiveMap() {
 
         {/* Floating Telemetry Badge */}
         {routeData && (
-          <div style={{
-            position: 'absolute',
-            bottom: 24,
-            left: 24,
-            zIndex: 1000,
-            background: 'var(--bg-surface)',
-            backdropFilter: 'blur(16px)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 12,
-            padding: '14px 18px',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
-            maxWidth: 320
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-              <strong style={{ fontSize: 13, color: 'var(--text-primary)' }}>
+          <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-xs z-[1000] bg-[var(--bg-surface)]/95 backdrop-blur-md border border-[var(--border-subtle)] rounded-xl p-3 sm:p-4 shadow-md">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <strong className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
                 {selectedAltId ? 'Alternative Bypass' : 'Active Primary Route'}
               </strong>
-              <span style={{
-                background: 'rgba(16, 185, 129, 0.15)',
-                color: '#059669',
-                fontSize: 10,
-                fontWeight: 800,
-                padding: '2px 6px',
-                borderRadius: 4
-              }}>
+              <Badge variant="low" size="sm" dot>
                 MONITORED
-              </span>
+              </Badge>
             </div>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>
-              Distance: <strong style={{ color: 'var(--text-primary)' }}>{selectedAltId ? routeData.alternatives?.find(a => a.id === selectedAltId)?.distance_km : routeData.distance_km} km</strong><br />
-              Transit Time: <strong style={{ color: 'var(--text-primary)' }}>{selectedAltId ? routeData.alternatives?.find(a => a.id === selectedAltId)?.duration_text : routeData.duration_text}</strong><br />
-              Terrain ML Risk: <strong style={{ color: '#059669' }}>LOW (Score: 22.5/100)</strong>
+            <div className="text-xs text-[var(--text-secondary)] space-y-0.5">
+              <div>Distance: <strong className="text-[var(--text-primary)]">{selectedAltId ? routeData.alternatives?.find(a => a.id === selectedAltId)?.distance_km : routeData.distance_km} km</strong></div>
+              <div>Transit Time: <strong className="text-[var(--text-primary)]">{selectedAltId ? routeData.alternatives?.find(a => a.id === selectedAltId)?.duration_text : routeData.duration_text}</strong></div>
+              <div>Terrain ML Risk: <strong className="text-[var(--primary)]">LOW (Score: 22.5/100)</strong></div>
             </div>
           </div>
         )}

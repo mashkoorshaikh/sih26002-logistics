@@ -29,19 +29,19 @@ export function Input({
       <div className="relative flex items-center">
         {Icon && (
           <div className="absolute left-3.5 text-[var(--text-muted)] pointer-events-none flex items-center justify-center">
-            <Icon className="w-5 h-5" />
+            <Icon className="w-4.5 h-4.5" />
           </div>
         )}
         <input
           id={inputId}
           required={required}
           className={`
-            w-full bg-[var(--bg-surface)] text-[var(--text-primary)] border text-sm rounded-lg
-            px-3.5 py-2.5 transition-all duration-150 outline-none
+            w-full min-h-[42px] bg-[var(--bg-surface)] text-[var(--text-primary)] border text-sm rounded-lg
+            px-3.5 py-2 transition-all duration-150 outline-none
             placeholder:text-[var(--text-muted)]
             focus:border-[var(--border-focus)] focus:ring-2 focus:ring-[var(--border-focus)]/20
             disabled:bg-[var(--bg-surface-subtle)] disabled:cursor-not-allowed disabled:opacity-60
-            ${Icon ? 'pl-11' : ''}
+            ${Icon ? 'pl-10' : ''}
             ${error ? 'border-[var(--color-danger)] focus:border-[var(--color-danger)] focus:ring-[var(--color-danger)]/20' : 'border-[var(--border-subtle)] hover:border-[var(--border-strong)]'}
             ${className}
           `}
@@ -49,9 +49,9 @@ export function Input({
         />
       </div>
       {error ? (
-        <p className="mt-1 text-xs text-[var(--color-danger)] font-medium">{error}</p>
+        <p className="mt-1.5 text-xs text-[var(--color-danger)] font-medium">{error}</p>
       ) : helperText ? (
-        <p className="mt-1 text-xs text-[var(--text-muted)]">{helperText}</p>
+        <p className="mt-1.5 text-xs text-[var(--text-muted)]">{helperText}</p>
       ) : null}
     </div>
   )

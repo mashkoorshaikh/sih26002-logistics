@@ -13,6 +13,7 @@ import {
   Globe,
   Sliders
 } from 'lucide-react'
+import { PageHeader, Card, Button, Badge, Input } from '../components/ui'
 
 export default function Settings() {
   const [dieselPrice, setDieselPrice] = useState(92.0)
@@ -28,121 +29,119 @@ export default function Settings() {
   }
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '28px 32px' }}>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Page Header */}
-      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <SettingsIcon size={20} color="#6366f1" />
-            <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 24, color: 'var(--text-primary)', margin: 0 }}>
-              Platform Settings & Parameters
-            </h2>
-          </div>
-          <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
-            Configure regional fuel price benchmarks, fleet dimension thresholds, and SIH 2024 evaluation preferences.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleSave}
-          className="btn-primary"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '10px 20px',
-            fontSize: 13,
-            fontWeight: 700,
-            cursor: 'pointer'
-          }}
-        >
-          {saved ? <CheckCircle2 size={16} /> : <Save size={16} />}
-          {saved ? 'Settings Saved!' : 'Save Configuration'}
-        </button>
-      </div>
+      <PageHeader
+        title="Platform Settings & Parameters"
+        subtitle="Configure regional fuel price benchmarks, fleet dimension thresholds, and SIH evaluation preferences."
+        breadcrumb={[
+          { label: 'Logistics', to: '/dashboard' },
+          { label: 'Settings' }
+        ]}
+        action={
+          <Button
+            variant="primary"
+            size="md"
+            icon={saved ? CheckCircle2 : Save}
+            onClick={handleSave}
+          >
+            {saved ? 'Settings Saved!' : 'Save Configuration'}
+          </Button>
+        }
+      />
 
       {/* Grid of Settings Cards */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="space-y-5">
         {/* 1. Regional Fuel Pricing Configuration */}
-        <div className="glass-card" style={{ padding: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <Fuel size={18} color="#d97706" />
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-              Regional Fuel Price Benchmarks (INR / Litre)
-            </h3>
+        <Card padding="default">
+          <div className="flex items-center gap-2.5 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+              <Fuel className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] leading-tight">
+                Regional Fuel Price Benchmarks (INR / Litre)
+              </h3>
+              <span className="text-xs text-[var(--text-muted)]">
+                Dynamic cost modeling parameters used in Google OR-Tools routing
+              </span>
+            </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label style={{ fontSize: 12, color: 'var(--text-muted)', display: 'block', marginBottom: 6 }}>
-                Commercial Freight Diesel (Base Rate)
+              <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1.5">
+                Commercial Diesel (Base Rate)
               </label>
-              <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>₹</span>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--text-muted)]">₹</span>
                 <input
                   type="number"
                   step="0.5"
                   value={dieselPrice}
                   onChange={e => setDieselPrice(parseFloat(e.target.value) || 0)}
-                  className="input-field"
-                  style={{ paddingLeft: 24 }}
+                  className="w-full h-10 pl-7 pr-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ fontSize: 12, color: 'var(--text-muted)', display: 'block', marginBottom: 6 }}>
-                Inspection Pilot Petrol (Base Rate)
+              <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1.5">
+                Inspection Petrol (Base Rate)
               </label>
-              <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>₹</span>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--text-muted)]">₹</span>
                 <input
                   type="number"
                   step="0.5"
                   value={petrolPrice}
                   onChange={e => setPetrolPrice(parseFloat(e.target.value) || 0)}
-                  className="input-field"
-                  style={{ paddingLeft: 24 }}
+                  className="w-full h-10 pl-7 pr-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ fontSize: 12, color: 'var(--text-muted)', display: 'block', marginBottom: 6 }}>
-                Remote Hill Surcharge (Mizoram / Arunachal)
+              <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1.5">
+                Remote Hill Surcharge
               </label>
-              <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>+₹</span>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--text-muted)]">+₹</span>
                 <input
                   type="number"
                   step="0.5"
                   value={hillSurcharge}
                   onChange={e => setHillSurcharge(parseFloat(e.target.value) || 0)}
-                  className="input-field"
-                  style={{ paddingLeft: 28 }}
+                  className="w-full h-10 pl-8 pr-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
                 />
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
-        {/* 2. SIH 2024 Demo & Evaluation Preferences */}
-        <div className="glass-card" style={{ padding: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <Sparkles size={18} color="#6366f1" />
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-              SIH 2024 Presentation & Demo Mode Flags
-            </h3>
+        {/* 2. SIH Demo & Evaluation Preferences */}
+        <Card padding="default">
+          <div className="flex items-center gap-2.5 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-[var(--primary-subtle)] text-[var(--primary)] flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] leading-tight">
+                SIH Presentation & Evaluation Preferences
+              </h3>
+              <span className="text-xs text-[var(--text-muted)]">
+                Toggle simulation aids and alert thresholds
+              </span>
+            </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border-subtle)' }}>
+          <div className="divide-y divide-[var(--border-subtle)]">
+            <div className="flex items-center justify-between py-3 gap-4">
               <div>
-                <strong style={{ fontSize: 14, color: 'var(--text-primary)', display: 'block' }}>
-                  Enable Real-Time Route Simulation Buttons
+                <strong className="text-xs sm:text-sm font-semibold text-[var(--text-primary)] block">
+                  Enable Real-Time Route Simulation Controls
                 </strong>
-                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                <span className="text-xs text-[var(--text-muted)]">
                   Displays 'Trigger Heavy Rainfall Event' and 'Trigger Landslide Warning' on route planners.
                 </span>
               </div>
@@ -150,16 +149,16 @@ export default function Settings() {
                 type="checkbox"
                 checked={demoMode}
                 onChange={e => setDemoMode(e.target.checked)}
-                style={{ width: 18, height: 18, accentColor: '#6366f1', cursor: 'pointer' }}
+                className="w-4 h-4 accent-[var(--primary)] rounded cursor-pointer"
               />
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0' }}>
+            <div className="flex items-center justify-between py-3 gap-4">
               <div>
-                <strong style={{ fontSize: 14, color: 'var(--text-primary)', display: 'block' }}>
+                <strong className="text-xs sm:text-sm font-semibold text-[var(--text-primary)] block">
                   Driver Hazard Audio Warning Beeps
                 </strong>
-                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                <span className="text-xs text-[var(--text-muted)]">
                   Audio alert pulse when corridor risk transitions from LOW to HIGH.
                 </span>
               </div>
@@ -167,51 +166,62 @@ export default function Settings() {
                 type="checkbox"
                 checked={audioAlerts}
                 onChange={e => setAudioAlerts(e.target.checked)}
-                style={{ width: 18, height: 18, accentColor: '#6366f1', cursor: 'pointer' }}
+                className="w-4 h-4 accent-[var(--primary)] rounded cursor-pointer"
               />
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* 3. Microservice Integrations Status */}
-        <div className="glass-card" style={{ padding: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <Cpu size={18} color="#0d9488" />
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-              Backend Microservices & AI Model Status
-            </h3>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
-            <div style={{ background: 'var(--bg-surface-subtle)', padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border-subtle)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#059669', fontWeight: 700, marginBottom: 4 }}>
-                <CheckCircle2 size={14} /> FastAPI Gateway
-              </div>
-              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>http://localhost:8000 • Online</span>
+        <Card padding="default">
+          <div className="flex items-center gap-2.5 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+              <Cpu className="w-4 h-4" />
             </div>
-
-            <div style={{ background: 'var(--bg-surface-subtle)', padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border-subtle)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#059669', fontWeight: 700, marginBottom: 4 }}>
-                <CheckCircle2 size={14} /> Google OR-Tools Solver
-              </div>
-              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>v9.10 Composite Optimization</span>
-            </div>
-
-            <div style={{ background: 'var(--bg-surface-subtle)', padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border-subtle)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#059669', fontWeight: 700, marginBottom: 4 }}>
-                <CheckCircle2 size={14} /> ML Random Forest Model
-              </div>
-              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>risk_rf_model.joblib • 100 Trees</span>
-            </div>
-
-            <div style={{ background: 'var(--bg-surface-subtle)', padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border-subtle)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#059669', fontWeight: 700, marginBottom: 4 }}>
-                <CheckCircle2 size={14} /> OpenAI GPT-4o-Mini
-              </div>
-              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Tool Calling Dispatcher Active</span>
+            <div>
+              <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] leading-tight">
+                Backend Microservices & AI Model Status
+              </h3>
+              <span className="text-xs text-[var(--text-muted)]">
+                Live heartbeat verification across routing and ML engines
+              </span>
             </div>
           </div>
-        </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="p-3 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--primary)] mb-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>FastAPI Gateway</span>
+              </div>
+              <span className="text-[11px] text-[var(--text-muted)]">localhost:8000 • Online</span>
+            </div>
+
+            <div className="p-3 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--primary)] mb-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>OR-Tools Solver</span>
+              </div>
+              <span className="text-[11px] text-[var(--text-muted)]">v9.10 Constraint Solver</span>
+            </div>
+
+            <div className="p-3 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--primary)] mb-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Random Forest</span>
+              </div>
+              <span className="text-[11px] text-[var(--text-muted)]">risk_rf_model • 100 Trees</span>
+            </div>
+
+            <div className="p-3 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--primary)] mb-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>OpenAI GPT-4o</span>
+              </div>
+              <span className="text-[11px] text-[var(--text-muted)]">Assistant Agent Active</span>
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
   )

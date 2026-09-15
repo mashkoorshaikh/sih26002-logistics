@@ -161,7 +161,7 @@ export default function TripsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Header */}
       <PageHeader
         title="Freight Trips & Dispatch History"
@@ -173,20 +173,20 @@ export default function TripsPage() {
       />
 
       {/* Trips Overview Metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
-        <Card padding="sm" className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-[var(--primary-subtle)] text-[var(--primary)] flex items-center justify-center flex-shrink-0 shadow-xs">
-            <Navigation className="w-5.5 h-5.5" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Card padding="sm" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--primary-subtle)] text-[var(--primary)] flex items-center justify-center flex-shrink-0 shadow-xs">
+            <Navigation className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs text-[var(--text-muted)] font-medium">Total Dispatched</div>
+            <div className="text-xs text-[var(--text-muted)] font-medium">Total Trips</div>
             <div className="text-xl font-bold text-[var(--text-primary)]">{trips.length}</div>
           </div>
         </Card>
 
-        <Card padding="sm" className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-[var(--risk-low-bg)] text-[var(--risk-low)] flex items-center justify-center flex-shrink-0 shadow-xs">
-            <Radio className="w-5.5 h-5.5 animate-pulse" />
+        <Card padding="sm" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--risk-low-bg)] text-[var(--risk-low)] flex items-center justify-center flex-shrink-0 shadow-xs">
+            <Radio className="w-5 h-5 animate-pulse" />
           </div>
           <div>
             <div className="text-xs text-[var(--text-muted)] font-medium">Live In Transit</div>
@@ -196,9 +196,9 @@ export default function TripsPage() {
           </div>
         </Card>
 
-        <Card padding="sm" className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-[var(--risk-med-bg)] text-[var(--risk-med)] flex items-center justify-center flex-shrink-0 shadow-xs">
-            <AlertTriangle className="w-5.5 h-5.5" />
+        <Card padding="sm" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--risk-med-bg)] text-[var(--risk-med)] flex items-center justify-center flex-shrink-0 shadow-xs">
+            <AlertTriangle className="w-5 h-5" />
           </div>
           <div>
             <div className="text-xs text-[var(--text-muted)] font-medium">Diverted En Route</div>
@@ -208,12 +208,12 @@ export default function TripsPage() {
           </div>
         </Card>
 
-        <Card padding="sm" className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-[var(--bg-surface-subtle)] text-[var(--text-secondary)] flex items-center justify-center flex-shrink-0 shadow-xs">
-            <Fuel className="w-5.5 h-5.5" />
+        <Card padding="sm" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--bg-surface-subtle)] text-[var(--text-secondary)] flex items-center justify-center flex-shrink-0 shadow-xs">
+            <Fuel className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs text-[var(--text-muted)] font-medium">Corridor Distance</div>
+            <div className="text-xs text-[var(--text-muted)] font-medium">Total Distance</div>
             <div className="text-xl font-bold text-[var(--text-primary)]">
               {Math.round(trips.reduce((acc, t) => acc + t.distance_km, 0))} km
             </div>
@@ -221,23 +221,23 @@ export default function TripsPage() {
         </Card>
       </div>
 
-      {/* Filter & Search Bar */}
-      <Card padding="sm" className="mb-6">
+      {/* Filter and Sorting Toolbar */}
+      <Card padding="sm">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <div className="flex-1 max-w-sm">
+          <div className="flex-1 max-w-md">
             <Input
-              placeholder="Search by Trip ID, route, vehicle, or cargo..."
+              placeholder="Search by trip ID, corridor, vehicle, or cargo..."
               icon={Search}
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
             <Select
               value={filterRisk}
               onChange={e => setFilterRisk(e.target.value)}
-              className="w-36"
+              className="w-full sm:w-36"
             >
               <option value="ALL">All Risk Tiers</option>
               <option value="LOW">Low Risk</option>
@@ -248,9 +248,9 @@ export default function TripsPage() {
             <Select
               value={filterStatus}
               onChange={e => setFilterStatus(e.target.value)}
-              className="w-36"
+              className="w-full sm:w-36"
             >
-              <option value="ALL">All Statuses</option>
+              <option value="ALL">All Status</option>
               <option value="IN_TRANSIT">In Transit</option>
               <option value="COMPLETED">Completed</option>
               <option value="DIVERTED">Diverted</option>
@@ -259,12 +259,12 @@ export default function TripsPage() {
         </div>
       </Card>
 
-      {/* Responsive Trips View */}
+      {/* Desktop Table View (>= 768px) */}
       {sortedTrips.length === 0 ? (
         <EmptyState
           icon={Navigation}
-          title="No trips found"
-          description="Try changing your search keywords or reset the risk and status filters."
+          title="No dispatches found"
+          description="Try modifying your search criteria or resetting filters to show complete trip history."
           action={
             <Button
               variant="outline"
@@ -277,59 +277,64 @@ export default function TripsPage() {
         />
       ) : (
         <>
-          {/* Desktop Table View (Hidden on mobile) */}
           <div className="hidden md:block">
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableHeader onClick={() => toggleSort('id')} className="cursor-pointer">
-                    <div className="flex items-center gap-1.5">
-                      <span>Trip ID & Date</span>
-                      <ArrowUpDown className="w-3 h-3 text-[var(--text-muted)]" />
-                    </div>
+                  <TableHeader>
+                    <button
+                      type="button"
+                      onClick={() => toggleSort('id')}
+                      className="inline-flex items-center gap-1 font-semibold uppercase hover:text-[var(--text-primary)] cursor-pointer"
+                    >
+                      Trip ID <ArrowUpDown className="w-3 h-3" />
+                    </button>
                   </TableHeader>
                   <TableHeader>Corridor</TableHeader>
                   <TableHeader>Vehicle & Cargo</TableHeader>
-                  <TableHeader onClick={() => toggleSort('distance_km')} className="cursor-pointer">
-                    <div className="flex items-center gap-1.5">
-                      <span>Distance / Cost</span>
-                      <ArrowUpDown className="w-3 h-3 text-[var(--text-muted)]" />
-                    </div>
+                  <TableHeader>
+                    <button
+                      type="button"
+                      onClick={() => toggleSort('distance_km')}
+                      className="inline-flex items-center gap-1 font-semibold uppercase hover:text-[var(--text-primary)] cursor-pointer"
+                    >
+                      Distance & Fuel <ArrowUpDown className="w-3 h-3" />
+                    </button>
                   </TableHeader>
-                  <TableHeader>Risk Assessment</TableHeader>
+                  <TableHeader>Risk Score</TableHeader>
                   <TableHeader>Status</TableHeader>
-                  <TableHeader className="text-right">Live Tracking</TableHeader>
+                  <TableHeader className="text-right">Live Telemetry</TableHeader>
                 </TableRow>
               </TableHead>
               <tbody>
                 {sortedTrips.map(trip => (
                   <TableRow key={trip.id}>
                     <TableCell>
-                      <div className="font-semibold text-[var(--text-primary)] font-mono">{trip.id}</div>
+                      <div className="font-bold font-mono text-[var(--text-primary)]">{trip.id}</div>
                       <div className="text-[11px] text-[var(--text-muted)]">{trip.date}</div>
                     </TableCell>
 
                     <TableCell>
-                      <div className="font-medium text-[var(--text-primary)] flex items-center gap-1.5">
-                        <span>{trip.source}</span>
-                        <span className="text-[var(--text-muted)]">➔</span>
-                        <span>{trip.destination}</span>
+                      <div className="font-semibold text-[var(--text-primary)]">
+                        {trip.source} ➔ {trip.destination}
                       </div>
+                      <div className="text-[11px] text-[var(--text-muted)] truncate max-w-xs">{trip.current_location}</div>
                     </TableCell>
 
                     <TableCell>
-                      <div className="font-medium text-[var(--text-primary)] text-xs">{trip.cargo}</div>
-                      <div className="text-[11px] text-[var(--text-muted)] truncate max-w-xs">{trip.vehicle}</div>
+                      <div className="text-xs font-semibold text-[var(--text-primary)]">{trip.cargo}</div>
+                      <div className="text-[11px] text-[var(--text-secondary)] truncate max-w-xs">{trip.vehicle}</div>
                     </TableCell>
 
                     <TableCell>
                       <div className="font-semibold text-[var(--text-primary)]">{trip.distance_km} km</div>
-                      <div className="text-[11px] text-[var(--text-muted)]">{trip.fuel_cost}</div>
+                      <div className="text-[11px] text-[var(--primary)] font-medium">{trip.fuel_cost}</div>
                     </TableCell>
 
                     <TableCell>
                       <Badge
                         variant={trip.risk_tier === 'LOW' ? 'low' : trip.risk_tier === 'MEDIUM' ? 'medium' : 'high'}
+                        size="sm"
                         dot
                       >
                         {trip.risk_tier} ({trip.risk_score})
@@ -337,19 +342,22 @@ export default function TripsPage() {
                     </TableCell>
 
                     <TableCell>
-                      <span className={`text-[11px] font-semibold ${trip.status === 'IN_TRANSIT' ? 'text-[var(--primary)]' : trip.status === 'DIVERTED' ? 'text-[var(--risk-med)]' : 'text-[var(--text-muted)]'}`}>
+                      <Badge
+                        variant={trip.status === 'IN_TRANSIT' ? 'low' : trip.status === 'DIVERTED' ? 'warning' : 'neutral'}
+                        size="sm"
+                      >
                         {trip.status}
-                      </span>
+                      </Badge>
                     </TableCell>
 
                     <TableCell className="text-right">
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
-                        icon={trip.status === 'IN_TRANSIT' ? Radio : Eye}
+                        icon={Radio}
                         onClick={() => setSelectedLiveTrip(trip)}
                       >
-                        {trip.status === 'IN_TRANSIT' ? 'Track Live' : 'View'}
+                        Track
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -358,41 +366,59 @@ export default function TripsPage() {
             </Table>
           </div>
 
-          {/* Mobile Compact Cards View (Hidden on desktop) */}
+          {/* Mobile Card View (< 768px: Zero Horizontal Scroll) */}
           <div className="md:hidden space-y-3">
             {sortedTrips.map(trip => (
               <Card key={trip.id} padding="sm" className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-[var(--text-primary)]">{trip.id}</span>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="text-xs font-mono font-bold text-[var(--text-primary)]">{trip.id}</span>
+                    <h3 className="text-sm font-bold text-[var(--text-primary)] mt-0.5">
+                      {trip.source} ➔ {trip.destination}
+                    </h3>
+                  </div>
                   <Badge
-                    variant={trip.risk_tier === 'LOW' ? 'low' : trip.risk_tier === 'MEDIUM' ? 'medium' : 'high'}
-                    dot
+                    variant={trip.status === 'IN_TRANSIT' ? 'low' : trip.status === 'DIVERTED' ? 'warning' : 'neutral'}
+                    size="sm"
                   >
-                    {trip.risk_tier}
+                    {trip.status}
                   </Badge>
                 </div>
 
-                <div className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-1.5">
-                  <span>{trip.source}</span>
-                  <span className="text-[var(--text-muted)]">➔</span>
-                  <span>{trip.destination}</span>
+                <div className="grid grid-cols-2 gap-2 text-xs py-2 border-t border-b border-[var(--border-subtle)]">
+                  <div>
+                    <span className="text-[10px] text-[var(--text-muted)] uppercase block">Cargo</span>
+                    <span className="font-semibold text-[var(--text-primary)] truncate block">{trip.cargo}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-[var(--text-muted)] uppercase block">Distance</span>
+                    <span className="font-semibold text-[var(--text-primary)]">{trip.distance_km} km</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-[var(--text-muted)] uppercase block">Fuel Cost</span>
+                    <span className="font-semibold text-[var(--primary)]">{trip.fuel_cost}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-[var(--text-muted)] uppercase block">Risk</span>
+                    <Badge
+                      variant={trip.risk_tier === 'LOW' ? 'low' : trip.risk_tier === 'MEDIUM' ? 'medium' : 'high'}
+                      size="sm"
+                      dot
+                    >
+                      {trip.risk_tier} ({trip.risk_score})
+                    </Badge>
+                  </div>
                 </div>
 
-                <div className="text-xs text-[var(--text-secondary)]">
-                  <div><strong>Cargo:</strong> {trip.cargo}</div>
-                  <div className="truncate"><strong>Vehicle:</strong> {trip.vehicle}</div>
-                  <div><strong>Dist/Cost:</strong> {trip.distance_km} km • {trip.fuel_cost}</div>
-                </div>
-
-                <div className="flex items-center justify-between pt-2 border-t border-[var(--border-subtle)]">
-                  <span className="text-[11px] text-[var(--text-muted)]">{trip.date}</span>
+                <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
+                  <span className="text-[11px] truncate max-w-[200px]">{trip.current_location}</span>
                   <Button
                     variant="outline"
                     size="sm"
                     icon={Radio}
                     onClick={() => setSelectedLiveTrip(trip)}
                   >
-                    Live Telemetry
+                    Track
                   </Button>
                 </div>
               </Card>
@@ -401,82 +427,70 @@ export default function TripsPage() {
         </>
       )}
 
-      {/* Live Vehicle Tracking Modal (Section 16 requirement) */}
+      {/* Live Telemetry Modal */}
       {selectedLiveTrip && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-2xl p-6 shadow-2xl">
-            <div className="flex items-center justify-between pb-4 mb-4 border-b border-[var(--border-subtle)]">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-[var(--primary-subtle)] text-[var(--primary)] flex items-center justify-center shadow-xs">
-                  <Radio className="w-5.5 h-5.5 animate-pulse" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-[var(--text-primary)]">
-                    Real-Time Telemetry: {selectedLiveTrip.id}
-                  </h3>
-                  <p className="text-xs text-[var(--text-muted)]">
-                    {selectedLiveTrip.vehicle}
-                  </p>
-                </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-2xl shadow-xl overflow-hidden animate-scale-up">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)]">
+              <div className="flex items-center gap-2">
+                <Radio className="w-5 h-5 text-[var(--primary)] animate-pulse" />
+                <h3 className="text-base font-bold text-[var(--text-primary)]">
+                  Live Dispatch Telemetry: {selectedLiveTrip.id}
+                </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedLiveTrip(null)}
-                className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-subtle)] transition-colors"
+                className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-subtle)] cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Tracking Status Card */}
-            <div className="p-4 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] mb-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[var(--primary)] animate-ping" />
-                  <span className="text-xs font-bold text-[var(--primary)]">
-                    {selectedLiveTrip.status === 'IN_TRANSIT' ? 'MOVING ON ROUTE' : selectedLiveTrip.status}
-                  </span>
+            <div className="p-6 space-y-4 text-xs">
+              <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
+                <div>
+                  <span className="text-[10px] text-[var(--text-muted)] uppercase block">Corridor</span>
+                  <strong className="text-sm text-[var(--text-primary)]">
+                    {selectedLiveTrip.source} ➔ {selectedLiveTrip.destination}
+                  </strong>
                 </div>
-                <span className="text-[11px] font-mono text-[var(--text-muted)]">
-                  Ping: {selectedLiveTrip.last_ping}
+                <div>
+                  <span className="text-[10px] text-[var(--text-muted)] uppercase block">Current Speed</span>
+                  <strong className="text-sm text-[var(--primary)]">{selectedLiveTrip.speed_kmh} km/h</strong>
+                </div>
+                <div>
+                  <span className="text-[10px] text-[var(--text-muted)] uppercase block">Last Sensor Ping</span>
+                  <span className="text-[var(--text-secondary)] font-medium">{selectedLiveTrip.last_ping}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-[var(--text-muted)] uppercase block">Estimated Fuel</span>
+                  <span className="text-[var(--primary)] font-semibold">{selectedLiveTrip.fuel_cost}</span>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] space-y-2">
+                <span className="text-[10px] text-[var(--text-muted)] uppercase font-semibold block">
+                  Current Checkpoint Location
                 </span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div>
-                  <span className="text-[var(--text-muted)]">Current Velocity:</span>
-                  <div className="font-bold text-[var(--text-primary)] text-sm">{selectedLiveTrip.speed_kmh} km/h</div>
+                <div className="flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)]">
+                  <MapPin className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
+                  <span>{selectedLiveTrip.current_location}</span>
                 </div>
-                <div>
-                  <span className="text-[var(--text-muted)]">Current Location:</span>
-                  <div className="font-bold text-[var(--text-primary)] text-sm">{selectedLiveTrip.current_location}</div>
-                </div>
+                <p className="text-[11px] text-[var(--text-secondary)]">
+                  Vehicle: {selectedLiveTrip.vehicle} • Assigned Cargo: {selectedLiveTrip.cargo}
+                </p>
               </div>
-            </div>
 
-            {/* Map Simulator Container */}
-            <div className="relative h-44 rounded-xl bg-slate-900 border border-[var(--border-subtle)] overflow-hidden flex flex-col items-center justify-center text-center p-4">
-              <div className="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px] opacity-20 pointer-events-none" />
-              
-              <div className="w-12 h-12 rounded-full bg-[var(--primary)]/25 border-2 border-[var(--primary)] flex items-center justify-center text-white mb-2 shadow-lg animate-bounce">
-                <Truck className="w-6 h-6 text-[var(--primary)]" />
+              <div className="pt-2 flex justify-end">
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => setSelectedLiveTrip(null)}
+                >
+                  Close Telemetry
+                </Button>
               </div>
-              <div className="text-xs font-semibold text-white">
-                {selectedLiveTrip.source} ➔ {selectedLiveTrip.destination}
-              </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">
-                GPS Position: Lat 25.8201° N, Lon 91.8890° E • Altitude: 840m
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-2.5 pt-4 mt-4 border-t border-[var(--border-subtle)]">
-              <Button
-                variant="outline"
-                size="md"
-                onClick={() => setSelectedLiveTrip(null)}
-              >
-                Close Tracking
-              </Button>
             </div>
           </div>
         </div>

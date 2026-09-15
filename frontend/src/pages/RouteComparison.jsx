@@ -368,111 +368,66 @@ export default function RouteComparison() {
   const recommendedRoute = comparisonList.find(c => c.is_recommended) || comparisonList[0]
 
   return (
-    <div style={{ maxWidth: 1400, margin: '0 auto', padding: '28px 32px' }}>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Top Header & Navigation */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 16,
-        marginBottom: 20
-      }}>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <GitCompare size={20} color="#818cf8" />
-            <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 24, color: 'var(--text-primary)', margin: 0 }}>
+          <div className="flex items-center gap-2 mb-1">
+            <GitCompare className="w-5 h-5 text-[var(--primary)]" />
+            <h2 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)]">
               Multi-Route Comparison Matrix
             </h2>
           </div>
-          <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
+          <p className="text-xs sm:text-sm text-[var(--text-muted)]">
             Algorithmic side-by-side evaluation comparing candidate routes across distance, transit time, fuel cost, terrain risk, and lifeline emergency access.
           </p>
         </div>
 
         {/* View Toggle Tabs */}
-        <div style={{
-          display: 'flex',
-          background: 'var(--bg-surface-subtle)',
-          padding: 4,
-          borderRadius: 10,
-          border: '1px solid var(--border-subtle)'
-        }}>
+        <div className="flex items-center p-1 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] flex-shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('corridor')}
-            style={{
-              padding: '8px 16px',
-              borderRadius: 8,
-              border: 'none',
-              background: activeTab === 'corridor' ? '#6366f1' : 'transparent',
-              color: activeTab === 'corridor' ? '#ffffff' : 'var(--text-muted)',
-              fontWeight: 700,
-              fontSize: 12,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              transition: 'all 0.15s'
-            }}
+            className={`
+              flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer
+              ${activeTab === 'corridor'
+                ? 'bg-[var(--primary)] text-white shadow-xs'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }
+            `}
           >
-            <Route size={14} />
-            Corridor Alternatives
+            <Route className="w-3.5 h-3.5" />
+            <span>Corridor Alternatives</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('benchmark')}
-            style={{
-              padding: '8px 16px',
-              borderRadius: 8,
-              border: 'none',
-              background: activeTab === 'benchmark' ? '#6366f1' : 'transparent',
-              color: activeTab === 'benchmark' ? '#ffffff' : 'var(--text-muted)',
-              fontWeight: 700,
-              fontSize: 12,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              transition: 'all 0.15s'
-            }}
+            className={`
+              flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer
+              ${activeTab === 'benchmark'
+                ? 'bg-[var(--primary)] text-white shadow-xs'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }
+            `}
           >
-            <Layers size={14} />
-            All NER Corridors Matrix
+            <Layers className="w-3.5 h-3.5" />
+            <span>All NER Corridors Matrix</span>
           </button>
         </div>
       </div>
 
       {/* Controls Bar for Corridor Alternatives */}
       {activeTab === 'corridor' && (
-        <div className="glass-card" style={{
-          padding: '14px 20px',
-          marginBottom: 24,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 14
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#94a3b8' }}>Select Corridor:</span>
+        <div className="p-3.5 sm:p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="text-xs font-bold text-[var(--text-secondary)]">Corridor:</span>
             <select
               value={selectedCorridor.source}
               onChange={(e) => {
                 const match = PRESET_CORRIDORS.find(c => c.source === e.target.value)
                 if (match) setSelectedCorridor(match)
               }}
-              style={{
-                padding: '8px 14px',
-                borderRadius: 8,
-                background: '#111827',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#f8fafc',
-                fontSize: 13,
-                fontWeight: 600,
-                outline: 'none',
-                cursor: 'pointer'
-              }}
+              className="h-8 px-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] cursor-pointer"
             >
               {PRESET_CORRIDORS.map(c => (
                 <option key={c.source} value={c.source}>{c.label}</option>
@@ -480,21 +435,13 @@ export default function RouteComparison() {
             </select>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 12, color: '#94a3b8' }}>Vehicle:</span>
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-[var(--text-muted)]">Vehicle:</span>
               <select
                 value={vehicleType}
                 onChange={e => setVehicleType(e.target.value)}
-                style={{
-                  padding: '6px 10px',
-                  borderRadius: 6,
-                  background: '#111827',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  color: '#f8fafc',
-                  fontSize: 12,
-                  outline: 'none'
-                }}
+                className="h-8 px-2.5 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] cursor-pointer"
               >
                 <option value="Truck">Truck (10t)</option>
                 <option value="Multi-Axle Heavy Truck">Heavy Truck (17t)</option>
@@ -503,20 +450,12 @@ export default function RouteComparison() {
               </select>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 12, color: '#94a3b8' }}>Cargo:</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-[var(--text-muted)]">Cargo:</span>
               <select
                 value={cargoType}
                 onChange={e => setCargoType(e.target.value)}
-                style={{
-                  padding: '6px 10px',
-                  borderRadius: 6,
-                  background: '#111827',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  color: '#f8fafc',
-                  fontSize: 12,
-                  outline: 'none'
-                }}
+                className="h-8 px-2.5 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] cursor-pointer"
               >
                 <option value="Vegetables">Perishable Vegetables</option>
                 <option value="Pharmaceuticals">Lifeline Pharma / Meds</option>
@@ -526,8 +465,8 @@ export default function RouteComparison() {
             </div>
 
             {loading && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#818cf8', fontSize: 12 }}>
-                <Loader2 size={15} className="animate-spin" />
+              <div className="flex items-center gap-1.5 text-xs text-[var(--primary)]">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
                 <span>Recalculating...</span>
               </div>
             )}
@@ -630,175 +569,139 @@ export default function RouteComparison() {
           )}
 
           {/* Structured Route Comparison Table with the 7 Required Columns */}
-          <div className="glass-card" style={{ padding: 24, marginBottom: 28 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Layers size={18} color="#6366f1" />
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+          <div className="p-4 sm:p-6 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-xs mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+              <div className="flex items-center gap-2">
+                <Layers className="w-4 h-4 text-[var(--primary)]" />
+                <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)]">
                   Candidate Routes Evaluation Table: {selectedCorridor.source} ➔ {selectedCorridor.destination}
                 </h3>
               </div>
-              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+              <span className="text-xs text-[var(--text-muted)]">
                 Overall Score Range: 0 (Severe Risk) ➔ 100 (Optimal)
               </span>
             </div>
 
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, textAlign: 'left' }}>
+            <div className="overflow-x-auto no-scrollbar">
+              <table className="w-full text-xs sm:text-sm text-left border-collapse">
                 <thead>
-                  <tr style={{
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-                    color: '#94a3b8',
-                    fontSize: 11,
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: 0.5
-                  }}>
-                    <th style={{ padding: '12px 14px' }}>Route</th>
-                    <th style={{ padding: '12px 14px' }}>Distance</th>
-                    <th style={{ padding: '12px 14px' }}>Time</th>
-                    <th style={{ padding: '12px 14px' }}>Fuel Cost</th>
-                    <th style={{ padding: '12px 14px' }}>Risk</th>
-                    <th style={{ padding: '12px 14px' }}>Accessibility</th>
-                    <th style={{ padding: '12px 14px' }}>Overall Score</th>
-                    <th style={{ padding: '12px 14px', textAlign: 'right' }}>Status</th>
+                  <tr className="border-b border-[var(--border-subtle)] text-[var(--text-muted)] text-[11px] font-bold uppercase tracking-wider">
+                    <th className="py-3 px-3.5">Route</th>
+                    <th className="py-3 px-3.5">Distance</th>
+                    <th className="py-3 px-3.5">Time</th>
+                    <th className="py-3 px-3.5">Fuel Cost</th>
+                    <th className="py-3 px-3.5">Risk</th>
+                    <th className="py-3 px-3.5">Accessibility</th>
+                    <th className="py-3 px-3.5">Overall Score</th>
+                    <th className="py-3 px-3.5 text-right">Status</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-[var(--border-subtle)]">
                   {comparisonList.map((route, idx) => {
                     const isSelected = selectedRouteId === route.id
                     return (
                       <tr
                         key={route.id || idx}
                         onClick={() => setSelectedRouteId(route.id)}
-                        style={{
-                          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                          background: route.is_recommended
-                            ? 'rgba(16, 185, 129, 0.1)'
+                        className={`
+                          cursor-pointer transition-colors
+                          ${route.is_recommended
+                            ? 'bg-[var(--primary-subtle)]/50'
                             : isSelected
-                            ? 'rgba(99, 102, 241, 0.12)'
-                            : 'transparent',
-                          borderLeft: route.is_recommended ? '4px solid #10b981' : '4px solid transparent',
-                          cursor: 'pointer',
-                          transition: 'background 0.15s'
+                            ? 'bg-[var(--bg-surface-subtle)]'
+                            : 'hover:bg-[var(--bg-surface-subtle)]/40'
+                          }
+                        `}
+                        style={{
+                          borderLeft: route.is_recommended ? '4px solid var(--primary)' : '4px solid transparent'
                         }}
                       >
                         {/* 1. Route */}
-                        <td style={{ padding: '16px 14px' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                              <span style={{ fontWeight: 800, color: route.is_recommended ? '#ffffff' : '#f1f5f9', fontSize: 14 }}>
+                        <td className="py-3.5 px-3.5">
+                          <div className="flex flex-col gap-0.5">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-bold text-[var(--text-primary)] text-xs sm:text-sm">
                                 {route.name}
                               </span>
                               {route.is_recommended && (
-                                <span style={{
-                                  background: '#10b981',
-                                  color: '#ffffff',
-                                  fontSize: 10,
-                                  fontWeight: 900,
-                                  padding: '2px 8px',
-                                  borderRadius: 12
-                                }}>
-                                  RECOMMENDED ROUTE
+                                <span className="bg-[var(--primary)] text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+                                  RECOMMENDED
                                 </span>
                               )}
                             </div>
-                            <span style={{ fontSize: 11, color: '#64748b' }}>{route.type}</span>
+                            <span className="text-[11px] text-[var(--text-muted)]">{route.type}</span>
                           </div>
                         </td>
 
                         {/* 2. Distance */}
-                        <td style={{ padding: '16px 14px', fontWeight: 600, color: '#cbd5e1' }}>
+                        <td className="py-3.5 px-3.5 font-semibold text-[var(--text-secondary)]">
                           {route.distance_km} km
                         </td>
 
                         {/* 3. Time */}
-                        <td style={{ padding: '16px 14px', color: '#cbd5e1' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                            <Clock size={13} color="#2dd4bf" />
+                        <td className="py-3.5 px-3.5 text-[var(--text-secondary)]">
+                          <div className="flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
                             <span>{route.duration_text}</span>
                           </div>
                         </td>
 
                         {/* 4. Fuel Cost */}
-                        <td style={{ padding: '16px 14px', fontWeight: 700, color: '#facc15' }}>
+                        <td className="py-3.5 px-3.5 font-bold text-amber-600 dark:text-amber-400">
                           {route.fuel_cost}
                         </td>
 
                         {/* 5. Risk */}
-                        <td style={{ padding: '16px 14px' }}>
-                          <span style={{
-                            background: route.risk_tier === 'LOW'
-                              ? 'rgba(16, 185, 129, 0.15)'
+                        <td className="py-3.5 px-3.5">
+                          <span className={`
+                            px-2 py-0.5 rounded-md text-[11px] font-bold inline-block
+                            ${route.risk_tier === 'LOW'
+                              ? 'bg-[var(--risk-low-bg)] text-[var(--risk-low)] border border-[var(--risk-low-border)]'
                               : route.risk_tier === 'MEDIUM'
-                              ? 'rgba(234, 179, 8, 0.15)'
-                              : 'rgba(239, 68, 68, 0.15)',
-                            color: route.risk_tier === 'LOW'
-                              ? '#34d399'
-                              : route.risk_tier === 'MEDIUM'
-                              ? '#facc15'
-                              : '#f87171',
-                            border: route.risk_tier === 'LOW'
-                              ? '1px solid rgba(16, 185, 129, 0.3)'
-                              : '1px solid rgba(239, 68, 68, 0.3)',
-                            borderRadius: 6,
-                            padding: '3px 8px',
-                            fontSize: 11,
-                            fontWeight: 700
-                          }}>
+                              ? 'bg-[var(--risk-med-bg)] text-[var(--risk-med)] border border-[var(--risk-med-border)]'
+                              : 'bg-[var(--risk-high-bg)] text-[var(--risk-high)] border border-[var(--risk-high-border)]'
+                            }
+                          `}>
                             {route.risk_tier} ({route.risk_score})
                           </span>
                         </td>
 
                         {/* 6. Accessibility */}
-                        <td style={{ padding: '16px 14px', color: '#94a3b8', fontSize: 12 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                            <Hospital size={13} color="#f43f5e" />
+                        <td className="py-3.5 px-3.5 text-[var(--text-secondary)] text-xs">
+                          <div className="flex items-center gap-1.5">
+                            <Hospital className="w-3.5 h-3.5 text-rose-500" />
                             <span>{route.accessibility_text}</span>
                           </div>
                         </td>
 
                         {/* 7. Overall Score */}
-                        <td style={{ padding: '16px 14px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <div style={{
-                              width: 36,
-                              height: 36,
-                              borderRadius: '50%',
-                              background: Number(route.overall_score) > 85 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.2)',
-                              border: Number(route.overall_score) > 85 ? '1px solid #10b981' : '1px solid #6366f1',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontWeight: 800,
-                              fontSize: 12,
-                              color: Number(route.overall_score) > 85 ? '#34d399' : '#818cf8'
-                            }}>
+                        <td className="py-3.5 px-3.5">
+                          <div className="flex items-center gap-2">
+                            <div className={`
+                              w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs
+                              ${Number(route.overall_score) > 85
+                                ? 'bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]/40'
+                                : 'bg-[var(--bg-surface-subtle)] text-[var(--text-secondary)] border border-[var(--border-subtle)]'
+                              }
+                            `}>
                               {Math.round(route.overall_score)}
                             </div>
-                            <span style={{ fontSize: 11, color: '#64748b' }}>/ 100</span>
+                            <span className="text-[11px] text-[var(--text-muted)]">/ 100</span>
                           </div>
                         </td>
 
                         {/* Status / Recommended badge */}
-                        <td style={{ padding: '16px 14px', textAlign: 'right' }}>
+                        <td className="py-3.5 px-3.5 text-right">
                           {route.suitability === 'NOT SUITABLE' ? (
-                            <span style={{ color: '#ef4444', fontWeight: 700, fontSize: 11 }}>
+                            <span className="text-[var(--color-danger)] font-bold text-[11px]">
                               BRIDGE DISQUALIFIED
                             </span>
                           ) : route.is_recommended ? (
-                            <span style={{
-                              color: '#10b981',
-                              fontWeight: 800,
-                              fontSize: 12,
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: 4
-                            }}>
+                            <span className="text-[var(--primary)] font-extrabold text-xs inline-flex items-center gap-1">
                               ✓ RECOMMENDED
                             </span>
                           ) : (
-                            <span style={{ color: '#94a3b8', fontSize: 12 }}>
+                            <span className="text-[var(--text-muted)] text-xs">
                               Viable Bypass
                             </span>
                           )}
@@ -848,140 +751,115 @@ export default function RouteComparison() {
           </div>
 
           {/* Master Comparison Table */}
-          <div className="glass-card" style={{ padding: 24, marginBottom: 28 }}>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, textAlign: 'left' }}>
+          <div className="p-4 sm:p-6 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-xs mb-6">
+            <div className="overflow-x-auto no-scrollbar">
+              <table className="w-full text-xs sm:text-sm text-left border-collapse">
                 <thead>
-                  <tr style={{
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-                    color: '#94a3b8',
-                    fontSize: 11,
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: 0.5
-                  }}>
-                    <th style={{ padding: '12px 14px' }}>Route</th>
-                    <th style={{ padding: '12px 14px' }}>Distance</th>
-                    <th style={{ padding: '12px 14px' }}>Time</th>
-                    <th style={{ padding: '12px 14px' }}>Fuel Cost</th>
-                    <th style={{ padding: '12px 14px' }}>Risk</th>
-                    <th style={{ padding: '12px 14px' }}>Accessibility</th>
-                    <th style={{ padding: '12px 14px' }}>Overall Score</th>
-                    <th style={{ padding: '12px 14px', textAlign: 'right' }}>Status</th>
+                  <tr className="border-b border-[var(--border-subtle)] text-[var(--text-muted)] text-[11px] font-bold uppercase tracking-wider">
+                    <th className="py-3 px-3.5">Route</th>
+                    <th className="py-3 px-3.5">Distance</th>
+                    <th className="py-3 px-3.5">Time</th>
+                    <th className="py-3 px-3.5">Fuel Cost</th>
+                    <th className="py-3 px-3.5">Risk</th>
+                    <th className="py-3 px-3.5">Accessibility</th>
+                    <th className="py-3 px-3.5">Overall Score</th>
+                    <th className="py-3 px-3.5 text-right">Status</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-[var(--border-subtle)]">
                   {MASTER_NER_CORRIDORS.map((c) => (
                     <tr
                       key={c.id}
+                      className={`
+                        transition-colors
+                        ${c.is_recommended ? 'bg-[var(--primary-subtle)]/50' : 'hover:bg-[var(--bg-surface-subtle)]/40'}
+                      `}
                       style={{
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                        background: c.is_recommended ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
-                        borderLeft: c.is_recommended ? '4px solid #10b981' : '4px solid transparent'
+                        borderLeft: c.is_recommended ? '4px solid var(--primary)' : '4px solid transparent'
                       }}
                     >
                       {/* 1. Route */}
-                      <td style={{ padding: '16px 14px' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <span style={{ fontWeight: 800, color: c.is_recommended ? '#ffffff' : '#f1f5f9', fontSize: 14 }}>
+                      <td className="py-3.5 px-3.5">
+                        <div className="flex flex-col gap-0.5">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-bold text-[var(--text-primary)] text-xs sm:text-sm">
                               {c.route}
                             </span>
                             {c.is_recommended && (
-                              <span style={{
-                                background: '#10b981',
-                                color: '#ffffff',
-                                fontSize: 10,
-                                fontWeight: 900,
-                                padding: '2px 8px',
-                                borderRadius: 12
-                              }}>
-                                RECOMMENDED ROUTE
+                              <span className="bg-[var(--primary)] text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+                                RECOMMENDED
                               </span>
                             )}
                           </div>
-                          <span style={{ fontSize: 11, color: '#64748b' }}>{c.highway}</span>
+                          <span className="text-[11px] text-[var(--text-muted)]">{c.highway}</span>
                         </div>
                       </td>
 
                       {/* 2. Distance */}
-                      <td style={{ padding: '16px 14px', fontWeight: 600, color: '#cbd5e1' }}>
+                      <td className="py-3.5 px-3.5 font-semibold text-[var(--text-secondary)]">
                         {c.distance_km} km
                       </td>
 
                       {/* 3. Time */}
-                      <td style={{ padding: '16px 14px', color: '#cbd5e1' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                          <Clock size={13} color="#2dd4bf" />
+                      <td className="py-3.5 px-3.5 text-[var(--text-secondary)]">
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
                           <span>{c.duration}</span>
                         </div>
                       </td>
 
                       {/* 4. Fuel Cost */}
-                      <td style={{ padding: '16px 14px', fontWeight: 700, color: '#facc15' }}>
+                      <td className="py-3.5 px-3.5 font-bold text-amber-600 dark:text-amber-400">
                         {c.fuel_cost}
                       </td>
 
                       {/* 5. Risk */}
-                      <td style={{ padding: '16px 14px' }}>
-                        <span style={{
-                          background: c.risk_tier === 'LOW'
-                            ? 'rgba(16, 185, 129, 0.15)'
+                      <td className="py-3.5 px-3.5">
+                        <span className={`
+                          px-2 py-0.5 rounded-md text-[11px] font-bold inline-block
+                          ${c.risk_tier === 'LOW'
+                            ? 'bg-[var(--risk-low-bg)] text-[var(--risk-low)] border border-[var(--risk-low-border)]'
                             : c.risk_tier === 'MEDIUM'
-                            ? 'rgba(234, 179, 8, 0.15)'
-                            : 'rgba(239, 68, 68, 0.15)',
-                          color: c.risk_tier === 'LOW'
-                            ? '#34d399'
-                            : c.risk_tier === 'MEDIUM'
-                            ? '#facc15'
-                            : '#f87171',
-                          borderRadius: 6,
-                          padding: '3px 8px',
-                          fontSize: 11,
-                          fontWeight: 700
-                        }}>
+                            ? 'bg-[var(--risk-med-bg)] text-[var(--risk-med)] border border-[var(--risk-med-border)]'
+                            : 'bg-[var(--risk-high-bg)] text-[var(--risk-high)] border border-[var(--risk-high-border)]'
+                          }
+                        `}>
                           {c.risk_tier} ({c.risk_score})
                         </span>
                       </td>
 
                       {/* 6. Accessibility */}
-                      <td style={{ padding: '16px 14px', color: '#94a3b8', fontSize: 12 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                          <Hospital size={13} color="#f43f5e" />
+                      <td className="py-3.5 px-3.5 text-[var(--text-secondary)] text-xs">
+                        <div className="flex items-center gap-1.5">
+                          <Hospital className="w-3.5 h-3.5 text-rose-500" />
                           <span>{c.accessibility}</span>
                         </div>
                       </td>
 
                       {/* 7. Overall Score */}
-                      <td style={{ padding: '16px 14px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <div style={{
-                            width: 36,
-                            height: 36,
-                            borderRadius: '50%',
-                            background: c.overall_score > 85 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.2)',
-                            border: c.overall_score > 85 ? '1px solid #10b981' : '1px solid #6366f1',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontWeight: 800,
-                            fontSize: 12,
-                            color: c.overall_score > 85 ? '#34d399' : '#818cf8'
-                          }}>
+                      <td className="py-3.5 px-3.5">
+                        <div className="flex items-center gap-2">
+                          <div className={`
+                            w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs
+                            ${c.overall_score > 85
+                              ? 'bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]/40'
+                              : 'bg-[var(--bg-surface-subtle)] text-[var(--text-secondary)] border border-[var(--border-subtle)]'
+                            }
+                          `}>
                             {Math.round(c.overall_score)}
                           </div>
-                          <span style={{ fontSize: 11, color: '#64748b' }}>/ 100</span>
+                          <span className="text-[11px] text-[var(--text-muted)]">/ 100</span>
                         </div>
                       </td>
 
                       {/* Status */}
-                      <td style={{ padding: '16px 14px', textAlign: 'right' }}>
+                      <td className="py-3.5 px-3.5 text-right">
                         {c.is_recommended ? (
-                          <span style={{ color: '#10b981', fontWeight: 800, fontSize: 12 }}>
+                          <span className="text-[var(--primary)] font-extrabold text-xs">
                             ★ TOP CORRIDOR
                           </span>
                         ) : (
-                          <span style={{ color: '#94a3b8', fontSize: 12 }}>
+                          <span className="text-[var(--text-muted)] text-xs">
                             Active Monitored
                           </span>
                         )}
@@ -996,38 +874,19 @@ export default function RouteComparison() {
       )}
 
       {/* Multi-Criteria Optimization Weight Legend */}
-      <div className="glass-card" style={{
-        padding: '18px 22px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 14
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#94a3b8' }}>
-          <Info size={16} color="#818cf8" />
-          <span>Google OR-Tools Multi-Objective Weights:</span>
-          <span style={{ color: '#cbd5e1' }}>Transit Time (35%) • ML Risk (30%) • Fuel Cost (20%) • Hospital Lifeline (15%)</span>
+      <div className="p-4 sm:p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)] flex-wrap">
+          <Info className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
+          <span className="font-bold text-[var(--text-primary)]">Google OR-Tools Multi-Objective Weights:</span>
+          <span className="text-[var(--text-muted)]">Transit Time (35%) • ML Risk (30%) • Fuel Cost (20%) • Hospital Lifeline (15%)</span>
         </div>
         <button
           type="button"
           onClick={() => alert(`Deployed route ${recommendedRoute?.name || 'Guwahati to Shillong'} for fleet dispatch!`)}
-          style={{
-            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: 8,
-            padding: '9px 18px',
-            fontSize: 12,
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-          }}
+          className="h-10 px-4 rounded-xl bg-[var(--primary)] text-white text-xs font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all cursor-pointer shadow-xs whitespace-nowrap self-start sm:self-auto"
         >
-          <CheckCircle2 size={15} /> Deploy Recommended Route
+          <CheckCircle2 className="w-4 h-4" />
+          <span>Deploy Recommended Route</span>
         </button>
       </div>
     </div>

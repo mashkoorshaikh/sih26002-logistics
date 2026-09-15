@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Award
 } from 'lucide-react'
+import { PageHeader, Card, Badge, StatCard, Input } from '../components/ui'
 
 const LIFELINE_FACILITIES = [
   {
@@ -106,163 +107,131 @@ export default function AccessibilityPage() {
   })
 
   return (
-    <div style={{ maxWidth: 1400, margin: '0 auto', padding: '28px 32px' }}>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Page Header */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-          <Hospital size={20} color="#f43f5e" />
-          <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 24, color: 'var(--text-primary)', margin: 0 }}>
-            Lifeline Emergency Infrastructure & Accessibility
-          </h2>
-        </div>
-        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
-          Geospatial proximity registry of emergency hospitals within the Golden Hour window, commercial fuel depots, and breakdown repair centers.
-        </p>
-      </div>
+      <PageHeader
+        title="Lifeline Emergency Infrastructure & Accessibility"
+        subtitle="Geospatial proximity registry of emergency hospitals within the Golden Hour window, commercial fuel depots, and breakdown repair centers."
+        breadcrumb={[
+          { label: 'Logistics', to: '/dashboard' },
+          { label: 'Lifeline Infrastructure' }
+        ]}
+      />
 
       {/* Summary KPI Cards */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: 16,
-        marginBottom: 28
-      }}>
-        <div className="glass-card" style={{ padding: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <Hospital size={18} color="#f43f5e" />
-            <span style={{ fontSize: 12, fontWeight: 700, color: '#fca5a5' }}>Hospitals Monitored</span>
-          </div>
-          <div style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 28, color: '#ffffff' }}>8 Facilities</div>
-          <div style={{ fontSize: 11, color: '#34d399', marginTop: 4 }}>✓ 100% Golden Hour Coverage</div>
-        </div>
-
-        <div className="glass-card" style={{ padding: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <Fuel size={18} color="#facc15" />
-            <span style={{ fontSize: 12, fontWeight: 700, color: '#fde047' }}>Fuel & DEF Hubs</span>
-          </div>
-          <div style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 28, color: '#ffffff' }}>12 Stations</div>
-          <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>High-Speed Diesel along NH6</div>
-        </div>
-
-        <div className="glass-card" style={{ padding: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <Wrench size={18} color="#2dd4bf" />
-            <span style={{ fontSize: 12, fontWeight: 700, color: '#99f6e4' }}>Breakdown Centers</span>
-          </div>
-          <div style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 28, color: '#ffffff' }}>5 Workshops</div>
-          <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>Heavy towing & hydraulic cranes</div>
-        </div>
-
-        <div className="glass-card" style={{ padding: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <Warehouse size={18} color="#818cf8" />
-            <span style={{ fontSize: 12, fontWeight: 700, color: '#c7d2fe' }}>Cold Storages</span>
-          </div>
-          <div style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 28, color: '#ffffff' }}>4 Hubs</div>
-          <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>Preserves perishable perishables</div>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="Hospitals Monitored"
+          value="8 Facilities"
+          change="✓ 100% Golden Hour Coverage"
+          changeType="positive"
+          icon={Hospital}
+        />
+        <StatCard
+          title="Fuel & DEF Hubs"
+          value="12 Stations"
+          change="High-Speed Diesel along NH6"
+          changeType="neutral"
+          icon={Fuel}
+        />
+        <StatCard
+          title="Breakdown Centers"
+          value="5 Workshops"
+          change="Heavy towing & cranes"
+          changeType="neutral"
+          icon={Wrench}
+        />
+        <StatCard
+          title="Cold Storages"
+          value="4 Hubs"
+          change="Preserves perishable cargo"
+          changeType="neutral"
+          icon={Warehouse}
+        />
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="glass-card" style={{ padding: '14px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-          {[
-            { id: 'all', label: 'All Lifeline Facilities' },
-            { id: 'hospital', label: '🏥 Hospitals' },
-            { id: 'fuel_station', label: '⛽ Fuel Hubs' },
-            { id: 'repair_center', label: '🔧 Breakdown Workshops' },
-            { id: 'warehouse', label: '📦 Warehouses & Cold Chain' },
-          ].map(t => (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setFilterType(t.id)}
-              style={{
-                background: filterType === t.id ? 'rgba(99, 102, 241, 0.25)' : 'rgba(255, 255, 255, 0.04)',
-                border: filterType === t.id ? '1px solid #6366f1' : '1px solid rgba(255, 255, 255, 0.08)',
-                color: filterType === t.id ? '#ffffff' : '#94a3b8',
-                borderRadius: 8,
-                padding: '6px 12px',
-                fontSize: 12,
-                cursor: 'pointer',
-                fontWeight: 600
-              }}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+      <Card padding="sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0 no-scrollbar">
+            {[
+              { id: 'all', label: 'All Lifelines' },
+              { id: 'hospital', label: '🏥 Hospitals' },
+              { id: 'fuel_station', label: '⛽ Fuel Hubs' },
+              { id: 'repair_center', label: '🔧 Breakdown Workshops' },
+              { id: 'warehouse', label: '📦 Warehouses' },
+            ].map(t => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setFilterType(t.id)}
+                className={`
+                  text-xs font-semibold px-3 py-1.5 rounded-lg whitespace-nowrap transition-all cursor-pointer
+                  ${filterType === t.id
+                    ? 'bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]/30'
+                    : 'bg-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-surface-subtle)] border border-transparent'
+                  }
+                `}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
 
-        <div style={{ position: 'relative', width: 260 }}>
-          <Search size={14} color="#64748b" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)' }} />
-          <input
-            type="text"
-            placeholder="Search facility name or city..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '7px 12px 7px 32px',
-              borderRadius: 8,
-              background: 'var(--bg-surface-subtle)',
-              border: '1px solid var(--border-subtle)',
-              color: 'var(--text-primary)',
-              fontSize: 12,
-              outline: 'none'
-            }}
-          />
+          <div className="w-full sm:w-72">
+            <Input
+              icon={Search}
+              placeholder="Search facility or city..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
-      </div>
+      </Card>
 
       {/* Facilities Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 18 }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map(f => (
-          <div key={f.id} className="glass-card" style={{ padding: 20, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <Card key={f.id} padding="default" className="flex flex-col justify-between hover:border-[var(--border-strong)] transition-all">
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <span style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: f.type === 'hospital' ? '#f43f5e' : f.type === 'fuel_station' ? '#d97706' : '#0d9488',
-                  background: 'var(--bg-surface-subtle)',
-                  padding: '2px 8px',
-                  borderRadius: 4
-                }}>
+              <div className="flex items-center justify-between gap-2 mb-2.5">
+                <Badge
+                  variant={f.type === 'hospital' ? 'high' : f.type === 'fuel_station' ? 'warning' : 'brand'}
+                  size="sm"
+                >
                   {f.rating}
-                </span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#059669' }}>
+                </Badge>
+                <span className="text-xs font-bold text-[var(--primary)]">
                   {f.distance_off_km} km off corridor
                 </span>
               </div>
 
-              <h4 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>
+              <h4 className="text-sm sm:text-base font-bold text-[var(--text-primary)] mb-1">
                 {f.name}
               </h4>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-muted)', marginBottom: 12 }}>
-                <MapPin size={13} color="#6366f1" />
+              <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] mb-3">
+                <MapPin className="w-3.5 h-3.5 text-[var(--primary)] flex-shrink-0" />
                 <span>{f.city}</span>
               </div>
 
-              <p style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4, margin: '0 0 14px 0' }}>
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
                 {f.services}
               </p>
             </div>
 
-            <div style={{
-              paddingTop: 12,
-              borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#38bdf8', fontWeight: 600 }}>
-                <PhoneCall size={13} />
+            <div className="pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between text-xs">
+              <a
+                href={`tel:${f.phone}`}
+                className="flex items-center gap-1.5 font-semibold text-[var(--primary)] hover:underline"
+              >
+                <PhoneCall className="w-3.5 h-3.5" />
                 <span>{f.phone}</span>
-              </div>
-              <span style={{ fontSize: 11, color: '#64748b' }}>Verified Emergency Record</span>
+              </a>
+              <span className="text-[11px] text-[var(--text-muted)]">
+                Verified Record
+              </span>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

@@ -2,57 +2,68 @@
 @import "tailwindcss";
 
 :root {
-  /* Surface & Canvas Colors (Light Mode Default) */
-  --bg-app: #f8fafc;
-  --bg-surface: #ffffff;
-  --bg-surface-subtle: #f1f5f9;
-  --bg-surface-hover: #f8fafc;
-  
+  /* ─── PRIMARY LIGHT THEME (DEFAULT) ─── */
+  --bg-app: #F7F9F7;               /* Soft, natural canvas */
+  --bg-surface: #FFFFFF;           /* Crisp card surface */
+  --bg-surface-subtle: #F0F4F1;    /* Secondary surface */
+  --bg-surface-hover: #E8EFEA;     /* Subtle hover tint */
+
   /* Borders */
-  --border-subtle: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --border-focus: #059669;
+  --border-subtle: #DCE5DE;        /* Clean restrained border */
+  --border-strong: #C4D2C7;        /* Focused / hover border */
+  --border-focus: #16845B;         /* Primary brand focus ring */
 
   /* Typography */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-primary: #17211B;         /* Dark natural primary text */
+  --text-secondary: #66736B;       /* Calm muted body text */
+  --text-muted: #8F9E95;           /* Secondary metadata */
 
-  /* Primary Brand: Deep Forest / Emerald Green (Northeast inspired) */
-  --primary: #059669;
-  --primary-hover: #047857;
-  --primary-subtle: #ecfdf5;
-  --primary-foreground: #ffffff;
+  /* Primary Brand: Northeast Inspired Forest / Emerald */
+  --primary: #16845B;              /* Primary accent */
+  --primary-hover: #116847;        /* Hover */
+  --primary-subtle: #DDF3E8;       /* Soft green */
+  --primary-foreground: #FFFFFF;
 
-  /* Accent: Muted Teal */
-  --accent: #0d9488;
-  --accent-hover: #0f766e;
-  --accent-subtle: #f0fdfa;
+  /* Secondary Accent */
+  --accent: #2FA36F;
+  --accent-hover: #268C5E;
+  --accent-subtle: #E6F5EE;
 
   /* Semantic Risk Tiers */
-  --risk-low: #059669;
-  --risk-low-bg: #ecfdf5;
-  --risk-low-border: #a7f3d0;
-  
-  --risk-med: #d97706;
-  --risk-med-bg: #fffbeb;
-  --risk-med-border: #fde68a;
+  --risk-low: #16845B;
+  --risk-low-bg: #DDF3E8;
+  --risk-low-border: #B2E2CA;
 
-  --risk-high: #dc2626;
-  --risk-high-bg: #fef2f2;
-  --risk-high-border: #fecaca;
+  --risk-med: #B45309;
+  --risk-med-bg: #FEF3C7;
+  --risk-med-border: #FDE68A;
+
+  --risk-high: #B91C1C;
+  --risk-high-bg: #FEE2E2;
+  --risk-high-border: #FECACA;
 
   /* Status Colors */
-  --color-success: #059669;
-  --color-warning: #d97706;
-  --color-danger: #dc2626;
-  --color-info: #2563eb;
+  --color-success: #16845B;
+  --color-warning: #B45309;
+  --color-danger: #B91C1C;
+  --color-info: #1D6FB8;
 
-  /* Shadows (Subtle, Restrained, Linear/Stripe style) */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+  /* Shadows (Subtle, Restrained, Stripe/Linear style) */
+  --shadow-xs: 0 1px 2px 0 rgba(23, 33, 27, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgba(23, 33, 27, 0.06), 0 1px 2px -1px rgba(23, 33, 27, 0.03);
+  --shadow-md: 0 4px 6px -1px rgba(23, 33, 27, 0.06), 0 2px 4px -2px rgba(23, 33, 27, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(23, 33, 27, 0.07), 0 4px 6px -4px rgba(23, 33, 27, 0.03);
+
+  /* Spacing Scale Tokens */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
 
   /* Legacy variable fallbacks */
   --color-primary: var(--primary);
@@ -64,48 +75,48 @@
 }
 
 .dark {
-  /* Surface & Canvas Colors (Dark Mode) */
-  --bg-app: #090d16;
-  --bg-surface: #0f172a;
-  --bg-surface-subtle: #1e293b;
-  --bg-surface-hover: #1e293b;
+  /* ─── ELEGANT DARK MODE (NO PURE BLACK, NO GLOWING NEON) ─── */
+  --bg-app: #0F1411;               /* Refined deep forest charcoal */
+  --bg-surface: #151C18;           /* Elevated card surface */
+  --bg-surface-subtle: #1B241F;    /* Secondary surface */
+  --bg-surface-hover: #222E27;     /* Hover surface */
 
   /* Borders */
-  --border-subtle: #1e293b;
-  --border-strong: #334155;
-  --border-focus: #10b981;
+  --border-subtle: #243028;        /* Subtle dark gray-green */
+  --border-strong: #36483D;        /* Strong border */
+  --border-focus: #2FA36F;         /* Emerald focus */
 
   /* Typography */
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --text-primary: #F1F5F2;         /* Crisp soft white */
+  --text-secondary: #9AA79F;       /* Calm muted text */
+  --text-muted: #6C7A71;           /* Dim metadata */
 
   /* Primary Brand */
-  --primary: #10b981;
-  --primary-hover: #059669;
-  --primary-subtle: rgba(16, 185, 129, 0.12);
-  --primary-foreground: #090d16;
+  --primary: #2FA36F;              /* Soft emerald / mint */
+  --primary-hover: #268C5E;
+  --primary-subtle: rgba(47, 163, 111, 0.16);
+  --primary-foreground: #0F1411;
 
   /* Accent */
-  --accent: #14b8a6;
-  --accent-hover: #0d9488;
-  --accent-subtle: rgba(20, 184, 166, 0.12);
+  --accent: #34B27B;
+  --accent-hover: #2FA36F;
+  --accent-subtle: rgba(52, 178, 123, 0.14);
 
-  /* Semantic Risk Tiers */
-  --risk-low: #10b981;
-  --risk-low-bg: rgba(16, 185, 129, 0.12);
-  --risk-low-border: rgba(16, 185, 129, 0.3);
+  /* Semantic Risk Tiers (Dark Mode) */
+  --risk-low: #34D399;
+  --risk-low-bg: rgba(52, 211, 153, 0.14);
+  --risk-low-border: rgba(52, 211, 153, 0.32);
 
-  --risk-med: #f59e0b;
-  --risk-med-bg: rgba(245, 158, 11, 0.12);
-  --risk-med-border: rgba(245, 158, 11, 0.3);
+  --risk-med: #FBBF24;
+  --risk-med-bg: rgba(251, 191, 36, 0.14);
+  --risk-med-border: rgba(251, 191, 36, 0.32);
 
-  --risk-high: #ef4444;
-  --risk-high-bg: rgba(239, 68, 68, 0.12);
-  --risk-high-border: rgba(239, 68, 68, 0.3);
+  --risk-high: #F87171;
+  --risk-high-bg: rgba(248, 113, 113, 0.14);
+  --risk-high-border: rgba(248, 113, 113, 0.32);
 
   /* Shadows for Dark Mode */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.45), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
@@ -132,7 +143,7 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Minimalist Scrollbar */
+/* Minimalist Clean Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -148,12 +159,12 @@ body {
   background: var(--text-muted);
 }
 
-/* Base Card (Clean 1px Border, Subtle Elevation, Light/Dark Adapting) */
+/* Standardized Card (1px Border, Subtle Elevation, Light/Dark Adapting) */
 .glass-card, .ui-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-xs);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -161,7 +172,7 @@ body {
   border-color: var(--border-strong);
 }
 
-/* Primary Button */
+/* Primary Button (Standardized 44px-48px height, natural width) */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -169,8 +180,9 @@ body {
   gap: 8px;
   background-color: var(--primary);
   color: var(--primary-foreground);
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 10px 18px;
+  min-height: 44px;
+  border-radius: 9px;
   border: 1px solid transparent;
   font-size: 13px;
   font-weight: 600;
@@ -202,8 +214,9 @@ body {
   gap: 8px;
   background-color: var(--bg-surface);
   color: var(--text-primary);
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 10px 18px;
+  min-height: 44px;
+  border-radius: 9px;
   border: 1px solid var(--border-subtle);
   font-size: 13px;
   font-weight: 500;
@@ -231,8 +244,9 @@ body {
   width: 100%;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 8px 12px;
+  border-radius: 9px;
+  padding: 9px 13px;
+  min-height: 42px;
   color: var(--text-primary);
   font-size: 13px;
   font-family: inherit;
@@ -242,7 +256,7 @@ body {
 }
 .input-field:focus {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+  box-shadow: 0 0 0 3px rgba(22, 132, 91, 0.15);
 }
 .input-field::placeholder {
   color: var(--text-muted);
@@ -259,7 +273,7 @@ body {
   font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 /* Semantic Risk Badges */
@@ -270,7 +284,7 @@ body {
   background-color: var(--risk-low-bg);
   color: var(--risk-low);
   border: 1px solid var(--risk-low-border);
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
@@ -283,7 +297,7 @@ body {
   background-color: var(--risk-med-bg);
   color: var(--risk-med);
   border: 1px solid var(--risk-med-border);
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
@@ -296,7 +310,7 @@ body {
   background-color: var(--risk-high-bg);
   color: var(--risk-high);
   border: 1px solid var(--risk-high-border);
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
@@ -342,3 +356,14 @@ body {
 .leaflet-popup-tip {
   background: var(--bg-surface) !important;
 }
+
+/* Scrollbar hiding utility for horizontal chip bars and tabs */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
