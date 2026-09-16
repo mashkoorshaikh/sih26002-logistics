@@ -150,7 +150,7 @@ export default function SegmentRiskSummary({ riskSummary, segments = [] }) {
               className="p-3.5 sm:p-4 rounded-xl bg-[var(--bg-surface-subtle)]/50 border border-[var(--border-subtle)] flex items-center justify-between flex-wrap gap-3"
             >
               {/* Left: Waypoint Node & Info */}
-              <div className="flex items-center gap-3 min-w-[240px]">
+              <div className="flex items-center gap-3 min-w-0 flex-1 sm:min-w-[220px]">
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                   style={{

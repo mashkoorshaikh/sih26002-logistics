@@ -392,22 +392,24 @@ export default function VehiclesPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
-                  <span className="truncate max-w-[200px] text-[11px]">{veh.current_corridor}</span>
+                <div className="flex items-center justify-between text-xs text-[var(--text-secondary)] pt-1">
+                  <span className="truncate max-w-[180px] sm:max-w-xs text-[11px]">{veh.current_corridor}</span>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => alert(`Viewing details for ${veh.name}`)}
-                      className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-secondary)]"
+                      className="min-h-[44px] min-w-[44px] rounded-lg border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-subtle)] flex items-center justify-center cursor-pointer transition-colors"
+                      title="View Details"
                     >
-                      <Info className="w-3.5 h-3.5" />
+                      <Info className="w-4 h-4" />
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(veh.id)}
-                      className="p-1.5 rounded-lg border border-[var(--risk-high-border)] text-[var(--color-danger)] bg-[var(--risk-high-bg)]"
+                      className="min-h-[44px] min-w-[44px] rounded-lg border border-[var(--risk-high-border)] text-[var(--color-danger)] bg-[var(--risk-high-bg)] hover:opacity-80 flex items-center justify-center cursor-pointer transition-colors"
+                      title="Delete Vehicle"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -419,8 +421,8 @@ export default function VehiclesPage() {
 
       {/* Add Vehicle Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-2xl shadow-xl overflow-hidden animate-scale-up">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-2xl shadow-xl animate-scale-up">
             <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)]">
               <h3 className="text-base font-bold text-[var(--text-primary)]">
                 Register New Logistics Vehicle

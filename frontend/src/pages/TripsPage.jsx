@@ -410,13 +410,14 @@ export default function TripsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
-                  <span className="text-[11px] truncate max-w-[200px]">{trip.current_location}</span>
+                <div className="flex items-center justify-between text-xs text-[var(--text-secondary)] pt-1">
+                  <span className="text-[11px] truncate max-w-[180px] sm:max-w-xs">{trip.current_location}</span>
                   <Button
                     variant="outline"
                     size="sm"
                     icon={Radio}
                     onClick={() => setSelectedLiveTrip(trip)}
+                    className="min-h-[44px] px-3.5"
                   >
                     Track
                   </Button>
@@ -429,8 +430,8 @@ export default function TripsPage() {
 
       {/* Live Telemetry Modal */}
       {selectedLiveTrip && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-2xl shadow-xl overflow-hidden animate-scale-up">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-2xl shadow-xl animate-scale-up">
             <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)]">
               <div className="flex items-center gap-2">
                 <Radio className="w-5 h-5 text-[var(--primary)] animate-pulse" />

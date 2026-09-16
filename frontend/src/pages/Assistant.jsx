@@ -280,20 +280,20 @@ export default function Assistant() {
           <div ref={chatEndRef} />
         </div>
 
-        {/* Suggested Prompt Chips (Section 15) */}
+        {/* Suggested Prompt Chips (Swipeable Horizontal Strip on Mobile) */}
         <div className="pt-3 border-t border-[var(--border-subtle)]">
           <div className="text-[11px] font-semibold text-[var(--text-muted)] mb-2 flex items-center gap-1.5">
-            <Sparkles className="w-3 h-3 text-[var(--primary)]" />
+            <Sparkles className="w-3.5 h-3.5 text-[var(--primary)]" />
             <span>Suggested Questions:</span>
           </div>
-          <div className="flex flex-wrap gap-1.5 pb-2">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-2 max-w-full">
             {PRESET_QUESTIONS.map((q, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => handleSendMessage(q)}
                 disabled={loading}
-                className="text-[11px] font-medium px-2.5 py-1 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface-subtle)]/70 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-all select-none disabled:opacity-50"
+                className="text-xs font-semibold px-3 py-2 sm:py-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-all select-none disabled:opacity-50 whitespace-nowrap min-h-[38px] cursor-pointer"
               >
                 {q}
               </button>
@@ -303,7 +303,7 @@ export default function Assistant() {
           {/* Input Box */}
           <form
             onSubmit={(e) => { e.preventDefault(); handleSendMessage() }}
-            className="flex items-center gap-2 pt-2"
+            className="flex items-center gap-2 pt-1"
           >
             <div className="flex-1">
               <Input
@@ -319,6 +319,7 @@ export default function Assistant() {
               size="md"
               icon={Send}
               disabled={loading || !inputQuery.trim()}
+              className="min-h-[44px]"
             >
               Send
             </Button>

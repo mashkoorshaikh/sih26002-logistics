@@ -80,7 +80,7 @@ export default function Settings() {
                   step="0.5"
                   value={dieselPrice}
                   onChange={e => setDieselPrice(parseFloat(e.target.value) || 0)}
-                  className="w-full h-10 pl-7 pr-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                  className="w-full min-h-[44px] pl-7 pr-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
                 />
               </div>
             </div>
@@ -96,7 +96,7 @@ export default function Settings() {
                   step="0.5"
                   value={petrolPrice}
                   onChange={e => setPetrolPrice(parseFloat(e.target.value) || 0)}
-                  className="w-full h-10 pl-7 pr-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                  className="w-full min-h-[44px] pl-7 pr-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
                 />
               </div>
             </div>
@@ -112,7 +112,7 @@ export default function Settings() {
                   step="0.5"
                   value={hillSurcharge}
                   onChange={e => setHillSurcharge(parseFloat(e.target.value) || 0)}
-                  className="w-full h-10 pl-8 pr-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                  className="w-full min-h-[44px] pl-8 pr-3 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
                 />
               </div>
             </div>

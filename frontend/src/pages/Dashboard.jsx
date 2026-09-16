@@ -17,8 +17,8 @@ import {
   Navigation,
   Plus,
   Loader2,
-  Radio,
-  Compass
+  Calendar,
+  ExternalLink
 } from 'lucide-react'
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
@@ -98,18 +98,19 @@ export default function Dashboard() {
   const routeCacheRef = useRef({})
 
   // Formatted date for header
-  const todayFormatted = new Date().toLocaleDateString('en-IN', {
-    weekday: 'long',
+  const todayFormatted = new Intl.DateTimeFormat('en-IN', {
+    weekday: 'short',
     day: 'numeric',
-    month: 'long',
+    month: 'short',
     year: 'numeric'
-  })
+  }).format(new Date())
 
-  // Handle instant corridor switching & pre-caching
+  // Handler for selecting an active corridor
   const handleSelectCorridor = async (corridor) => {
+    if (selectedCorridor.id === corridor.id && routeData) return
     setSelectedCorridor(corridor)
-    const cacheKey = `${corridor.origin}_${corridor.destination}`
 
+    const cacheKey = `${corridor.origin}_${corridor.destination}`
     if (routeCacheRef.current[cacheKey]) {
       setRouteData(routeCacheRef.current[cacheKey])
       return
@@ -183,105 +184,115 @@ export default function Dashboard() {
   }, [])
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-      {/* ─── TOP PAGE TITLE, DESCRIPTION & PRIMARY ACTION ─────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-[var(--border-subtle)]">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-            <span className="text-xs font-semibold text-[var(--primary)] uppercase tracking-wider">
-              Operations Center
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8 w-full max-w-[100vw] overflow-x-hidden">
+      {/* ─── 1. WELCOME & MAIN ACTION (MOBILE-FIRST PRIORITY) ──────────────── */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 sm:pb-6 border-b border-[var(--border-subtle)]">
+        <div className="space-y-1 sm:space-y-1.5 min-w-0">
+          <div className="flex items-center gap-2 text-xs flex-wrap">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-pulse" />
+              OPERATIONS COMMAND
             </span>
-            <span className="text-[var(--text-muted)]">•</span>
-            <span className="text-xs text-[var(--text-muted)]">{todayFormatted}</span>
+            <span className="text-[var(--text-muted)] hidden sm:inline">•</span>
+            <span className="text-[11px] sm:text-xs font-medium text-[var(--text-secondary)] flex items-center gap-1">
+              <Calendar className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+              {todayFormatted}
+            </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-primary)]">
+
+          <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--text-primary)] leading-tight">
             Welcome back, {user?.full_name?.split(' ')[0] || 'Officer'}
           </h1>
-          <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-1 max-w-2xl leading-relaxed">
-            Real-time corridor telemetry, mountain hazard tracking, and multi-objective route optimization across Northeast India.
+          <p className="text-xs sm:text-sm text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+            Real-time corridor telemetry, mountain hazard tracking, and route optimization across the 8 NER states.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <Button
-            variant="secondary"
-            size="md"
-            icon={Navigation}
-            onClick={() => navigate('/trips')}
-          >
-            Trip History
-          </Button>
-
+        {/* ─── 2. PLAN NEW ROUTE CTA (Prominent, High-Touch) ─── */}
+        <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap sm:flex-nowrap pt-1 sm:pt-0">
           <Button
             variant="primary"
             size="md"
             icon={Plus}
             onClick={() => navigate('/plan')}
+            className="min-h-[44px] sm:h-11 px-4 sm:px-5 shadow-xs font-bold text-xs sm:text-sm flex-1 sm:flex-initial justify-center"
           >
             Plan New Route
+          </Button>
+
+          <Button
+            variant="secondary"
+            size="md"
+            icon={Navigation}
+            onClick={() => navigate('/trips')}
+            className="min-h-[44px] sm:h-11 px-4 sm:px-5 font-semibold text-xs sm:text-sm flex-1 sm:flex-initial justify-center"
+          >
+            Trip History
           </Button>
         </div>
       </div>
 
-      {/* ─── 4 KPI CARDS (4 cols desktop, 2 tablet, 1-2 mobile) ───────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+      {/* ─── 3. IMPORTANT KPI: EXACT 2 COLUMNS ON MOBILE, 4 ON DESKTOP ──────── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5">
+        {/* Row 1: Trips | Vehicles */}
         <StatCard
-          title="Total Trips"
+          title="Trips"
           value="1,284"
-          change="+12% this wk"
+          change="+12%"
           changeType="positive"
-          subtitle="Across 8 NER states"
+          subtitle="8 NER states"
           icon={Navigation}
         />
 
         <StatCard
-          title="Active Vehicles"
+          title="Vehicles"
           value="48"
-          change="4 En Route"
+          change="4 Live"
           changeType="positive"
-          subtitle="Multi-axle & cold-chain reefers"
+          subtitle="Reefers active"
           icon={Truck}
         />
 
+        {/* Row 2: High Risk | Savings */}
         <StatCard
-          title="High Risk Routes"
+          title="High Risk"
           value="3"
-          change="Landslide Watch"
+          change="Watch"
           changeType="negative"
-          subtitle="Pagla Pahar & Sela Pass"
+          subtitle="Landslide radar"
           icon={AlertTriangle}
         />
 
         <StatCard
-          title="Estimated Savings"
+          title="Savings"
           value="₹2.4L"
-          change="18.4% cost saving"
+          change="18.4%"
           changeType="positive"
-          subtitle="Via OR-Tools optimization"
+          subtitle="OR-Tools saved"
           icon={TrendingUp}
         />
       </div>
 
-      {/* ─── CORRIDOR MONITORING & MAP SPLIT (35% / 65%) ──────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        {/* Monitored Corridors List (4 of 12 cols on desktop) */}
-        <div className="lg:col-span-5 space-y-3">
-          <Card padding="sm">
-            <div className="flex items-center justify-between mb-3 px-1">
+      {/* ─── 4 & 5. RECENT ACTIVITY & GIS MAP COMMAND CENTER ────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
+        {/* 4. Monitored Corridors List (5 of 12 cols on desktop) */}
+        <div className="lg:col-span-5 space-y-3.5">
+          <Card padding="default" className="rounded-xl sm:rounded-2xl border-[var(--border-subtle)] shadow-xs">
+            <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-[var(--border-subtle)]">
               <div>
-                <h2 className="text-sm font-bold text-[var(--text-primary)]">
+                <h2 className="text-sm sm:text-base font-bold text-[var(--text-primary)] leading-tight">
                   Active Monitored Corridors
                 </h2>
-                <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-                  Select a corridor to preview real-time geometry & terrain
+                <p className="text-[11px] sm:text-xs text-[var(--text-secondary)] mt-0.5">
+                  Select an artery to preview terrain, geometry & risk
                 </p>
               </div>
               <Badge variant="brand" size="sm" dot>
-                Live
+                Live Feed
               </Badge>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {ACTIVE_CORRIDORS.map(corridor => {
                 const isSelected = selectedCorridor.id === corridor.id
                 const riskVariant = corridor.risk_tier === 'LOW' ? 'low' : corridor.risk_tier === 'MEDIUM' ? 'medium' : 'high'
@@ -291,75 +302,87 @@ export default function Dashboard() {
                     key={corridor.id}
                     onClick={() => handleSelectCorridor(corridor)}
                     className={`
-                      p-3 rounded-xl border transition-all duration-150 cursor-pointer select-none
+                      p-3 sm:p-3.5 rounded-xl border transition-all duration-150 cursor-pointer select-none min-h-[44px]
                       ${isSelected
-                        ? 'bg-[var(--primary-subtle)] border-[var(--primary)] shadow-xs'
+                        ? 'bg-[var(--primary-subtle)] border-[var(--primary)] shadow-2xs'
                         : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-subtle)]'
                       }
                     `}
                   >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-[var(--text-primary)]">
+                    <div className="flex items-center justify-between mb-1.5 gap-2">
+                      <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                        <span className="text-xs sm:text-sm font-bold text-[var(--text-primary)] truncate">
                           {corridor.origin} ➔ {corridor.destination}
                         </span>
                         {corridor.is_recommended && (
-                          <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[var(--risk-low-bg)] text-[var(--risk-low)] border border-[var(--risk-low-border)]">
-                            BEST
+                          <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 flex-shrink-0">
+                            OPTIMAL
                           </span>
                         )}
                       </div>
-                      <Badge variant={riskVariant} size="sm" dot>
+                      <Badge variant={riskVariant} size="sm" dot className="flex-shrink-0">
                         {corridor.risk_tier} ({corridor.risk_score})
                       </Badge>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-[var(--text-secondary)]">
-                      <span>{corridor.nh_number} • {corridor.distance_km} km</span>
-                      <span className="font-semibold text-[var(--text-primary)]">{corridor.fuel_cost}</span>
+                    <div className="flex items-center justify-between text-[11px] sm:text-xs text-[var(--text-secondary)] pt-1 border-t border-[var(--border-subtle)]/60">
+                      <span className="font-medium truncate">{corridor.nh_number} • {corridor.distance_km} km</span>
+                      <span className="font-bold text-[var(--text-primary)] flex-shrink-0 ml-2">{corridor.fuel_cost}</span>
                     </div>
                   </div>
                 )
               })}
             </div>
 
-            <div className="mt-4 pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between px-1">
-              <span className="text-xs text-[var(--text-secondary)]">Need custom waypoints?</span>
+            <div className="mt-4 pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
+              <span className="text-xs text-[var(--text-secondary)]">Custom calculations:</span>
               <Button
                 variant="ghost"
                 size="sm"
                 iconRight={ArrowRight}
                 onClick={() => navigate('/plan')}
+                className="font-bold text-[var(--primary)] text-xs"
               >
-                Custom Planner
+                Open Planner →
               </Button>
             </div>
           </Card>
         </div>
 
-        {/* Corridor Map Preview (7 of 12 cols on desktop) */}
+        {/* 5. Corridor Map Preview (7 of 12 cols on desktop) */}
         <div className="lg:col-span-7">
-          <Card padding="none" className="overflow-hidden border border-[var(--border-subtle)]">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[var(--primary)]" />
-                <span className="text-xs font-bold text-[var(--text-primary)]">
-                  Live GIS View: {selectedCorridor.origin} ➔ {selectedCorridor.destination}
-                </span>
-                {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--primary)] ml-1" />}
+          <Card padding="none" className="rounded-xl sm:rounded-2xl overflow-hidden border border-[var(--border-subtle)] shadow-xs">
+            <div className="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-[var(--primary-subtle)] text-[var(--primary)] flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs sm:text-sm font-bold text-[var(--text-primary)] truncate">
+                      GIS: {selectedCorridor.origin} ➔ {selectedCorridor.destination}
+                    </span>
+                    {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--primary)] flex-shrink-0" />}
+                  </div>
+                  <span className="text-[10px] sm:text-xs text-[var(--text-muted)] font-medium truncate block">
+                    Mountain Elevation & Risk Layer
+                  </span>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <Link
                   to="/live-map"
-                  className="text-xs font-semibold text-[var(--primary)] hover:underline flex items-center gap-1"
+                  className="text-xs font-bold text-[var(--primary)] hover:underline flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[var(--primary-subtle)]"
                 >
-                  Full Mountain GIS <ArrowRight className="w-3 h-3" />
+                  <span>Full Map</span>
+                  <ExternalLink className="w-3 h-3" />
                 </Link>
               </div>
             </div>
 
-            <div className="h-[360px] sm:h-[420px] w-full relative">
+            {/* Responsive map container: 280px on mobile, 380px on tablet, 480px on desktop */}
+            <div className="h-[280px] sm:h-[380px] lg:h-[480px] w-full relative">
               <RouteMap
                 routeData={routeData}
                 height="100%"
@@ -369,29 +392,70 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* ─── REGIONAL TRENDS & ANALYTICS (2 Columns Desktop, 1 Column Mobile) ─ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <Card padding="default">
+      {/* ─── 6 & 7. RISK INFORMATION & REGIONAL ANALYTICS CHARTS ────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+        {/* 6. Corridor Risk Tier Distribution (Risk info first) */}
+        <Card padding="default" className="rounded-xl sm:rounded-2xl border-[var(--border-subtle)] shadow-xs">
+          <CardHeader
+            title="Corridor Risk Tier Distribution"
+            subtitle="Categorized by AI safety thresholds across monitored highways"
+            icon={ShieldAlert}
+            action={
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/risk')}
+                className="font-bold text-[var(--primary)] text-xs"
+              >
+                Risk Map →
+              </Button>
+            }
+          />
+          <div className="h-60 sm:h-72 w-full pt-3">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={riskDistribution} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                <XAxis dataKey="tier" stroke="var(--text-muted)" fontSize={11} tickLine={false} />
+                <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'var(--bg-surface)',
+                    borderColor: 'var(--border-subtle)',
+                    borderRadius: '12px',
+                    fontSize: '12px',
+                    color: 'var(--text-primary)',
+                    boxShadow: 'var(--shadow-md)'
+                  }}
+                />
+                <Bar dataKey="routes" fill="#16845B" radius={[6, 6, 0, 0]} name="Monitored Corridors" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        {/* 7. Monthly Freight Volume Analytics */}
+        <Card padding="default" className="rounded-xl sm:rounded-2xl border-[var(--border-subtle)] shadow-xs">
           <CardHeader
             title="Monthly Freight Volume (Tonnes)"
-            subtitle="Regional corridor dispatches over the past 6 months"
+            subtitle="Regional corridor dispatches across northeast hubs"
             icon={TrendingUp}
             action={
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/analytics')}
+                className="font-bold text-[var(--primary)] text-xs"
               >
-                Deep Dive
+                Deep Dive →
               </Button>
             }
           />
-          <div className="h-60 w-full pt-2">
+          <div className="h-60 sm:h-72 w-full pt-3">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={monthlyTrends}>
+              <AreaChart data={monthlyTrends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorTrips" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#16845B" stopOpacity={0.25}/>
+                    <stop offset="5%" stopColor="#16845B" stopOpacity={0.3}/>
                     <stop offset="95%" stopColor="#16845B" stopOpacity={0.0}/>
                   </linearGradient>
                 </defs>
@@ -402,51 +466,14 @@ export default function Dashboard() {
                   contentStyle={{
                     backgroundColor: 'var(--bg-surface)',
                     borderColor: 'var(--border-subtle)',
-                    borderRadius: '8px',
+                    borderRadius: '12px',
                     fontSize: '12px',
                     color: 'var(--text-primary)',
-                    boxShadow: 'var(--shadow-sm)'
+                    boxShadow: 'var(--shadow-md)'
                   }}
                 />
-                <Area type="monotone" dataKey="trips" stroke="#16845B" strokeWidth={2} fillOpacity={1} fill="url(#colorTrips)" name="Freight Tonnes" />
+                <Area type="monotone" dataKey="trips" stroke="#16845B" strokeWidth={2.5} fillOpacity={1} fill="url(#colorTrips)" name="Freight Tonnes" />
               </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        <Card padding="default">
-          <CardHeader
-            title="Corridor Risk Tier Distribution"
-            subtitle="Categorized by AI safety thresholds across monitored highways"
-            icon={ShieldAlert}
-            action={
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/risk')}
-              >
-                View Risk Map
-              </Button>
-            }
-          />
-          <div className="h-60 w-full pt-2">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={riskDistribution}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
-                <XAxis dataKey="tier" stroke="var(--text-muted)" fontSize={11} tickLine={false} />
-                <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'var(--bg-surface)',
-                    borderColor: 'var(--border-subtle)',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                    color: 'var(--text-primary)',
-                    boxShadow: 'var(--shadow-sm)'
-                  }}
-                />
-                <Bar dataKey="routes" fill="#2FA36F" radius={[6, 6, 0, 0]} name="Monitored Corridors" />
-              </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>

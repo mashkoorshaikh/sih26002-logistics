@@ -153,7 +153,7 @@ export default function RouteMonitoringPanel({
 
         {/* Simulation Buttons */}
         <div className="flex items-center gap-1.5 flex-wrap p-1 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
-          <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 px-2 py-0.5 flex items-center gap-1">
+          <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 px-2 py-1 flex items-center gap-1">
             <Zap className="w-3 h-3" /> TEST
           </span>
 
@@ -162,7 +162,7 @@ export default function RouteMonitoringPanel({
             onClick={() => handleTriggerSimulation('heavy_rainfall')}
             disabled={loading}
             className={`
-              text-xs font-medium px-2.5 py-1 rounded-md border transition-all flex items-center gap-1.5 cursor-pointer
+              text-xs font-medium px-3 py-2 sm:py-1 rounded-md border transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px]
               ${activeSimulation === 'heavy_rainfall'
                 ? 'bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30'
                 : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
@@ -178,7 +178,7 @@ export default function RouteMonitoringPanel({
             onClick={() => handleTriggerSimulation('landslide_closure')}
             disabled={loading}
             className={`
-              text-xs font-medium px-2.5 py-1 rounded-md border transition-all flex items-center gap-1.5 cursor-pointer
+              text-xs font-medium px-3 py-2 sm:py-1 rounded-md border transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px]
               ${activeSimulation === 'landslide_closure'
                 ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30'
                 : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
@@ -195,7 +195,7 @@ export default function RouteMonitoringPanel({
               onClick={handleResetSimulation}
               disabled={loading}
               title="Reset to live baseline"
-              className="text-xs font-medium px-2 py-1 rounded-md bg-[var(--risk-high-bg)] border border-[var(--risk-high-border)] text-[var(--color-danger)] flex items-center gap-1 cursor-pointer hover:opacity-80"
+              className="text-xs font-medium px-2.5 py-2 sm:py-1 rounded-md bg-[var(--risk-high-bg)] border border-[var(--risk-high-border)] text-[var(--color-danger)] flex items-center gap-1 cursor-pointer hover:opacity-80 min-h-[38px]"
             >
               <RotateCcw className="w-3 h-3" />
               <span>Reset</span>
@@ -291,9 +291,9 @@ export default function RouteMonitoringPanel({
           </div>
 
           {/* Action Row */}
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-3 pt-2">
             {isRerouted ? (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
                 <span className="text-xs text-[var(--risk-low)] font-semibold">
                   ✓ Switched to {alertData.alternative_route?.route_name}
                 </span>
@@ -301,6 +301,7 @@ export default function RouteMonitoringPanel({
                   variant="outline"
                   size="sm"
                   onClick={handleRevert}
+                  className="min-h-[44px]"
                 >
                   Revert to Primary Route
                 </Button>
@@ -313,6 +314,7 @@ export default function RouteMonitoringPanel({
                 onClick={handleSwitchRoute}
                 icon={ShieldCheck}
                 iconRight={ArrowRight}
+                className="w-full sm:w-auto min-h-[44px] justify-center"
               >
                 Switch to safer route
               </Button>

@@ -582,22 +582,22 @@ export default function Analytics() {
             </div>
           </div>
 
-          <div className="flex gap-4 flex-wrap">
-            <div>
-              <span className="text-[10px] text-[var(--text-muted)] uppercase block font-semibold">Total Fuel Conserved</span>
-              <span className="text-base sm:text-lg font-bold text-[var(--primary)]">
+          <div className="grid grid-cols-3 gap-2 w-full sm:w-auto">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-center sm:text-left">
+              <span className="text-[10px] text-[var(--text-muted)] uppercase block font-semibold truncate">Fuel Saved</span>
+              <span className="text-xs sm:text-lg font-bold text-[var(--primary)] truncate block">
                 {savings?.summary?.total_fuel_saved_liters?.toLocaleString() || '4,850'} L
               </span>
             </div>
-            <div>
-              <span className="text-[10px] text-[var(--text-muted)] uppercase block font-semibold">Total Net Savings</span>
-              <span className="text-base sm:text-lg font-bold text-amber-600 dark:text-amber-400">
-                ₹{savings?.summary?.total_money_saved_inr?.toLocaleString() || '4,46,200'}
+            <div className="p-2 sm:p-2.5 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-center sm:text-left">
+              <span className="text-[10px] text-[var(--text-muted)] uppercase block font-semibold truncate">Net Savings</span>
+              <span className="text-xs sm:text-lg font-bold text-amber-600 dark:text-amber-400 truncate block">
+                ₹{savings?.summary?.total_money_saved_inr ? `${(savings.summary.total_money_saved_inr / 1000).toFixed(0)}k` : '446k'}
               </span>
             </div>
-            <div>
-              <span className="text-[10px] text-[var(--text-muted)] uppercase block font-semibold">CO2 Avoided</span>
-              <span className="text-base sm:text-lg font-bold text-sky-600 dark:text-sky-400">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-center sm:text-left">
+              <span className="text-[10px] text-[var(--text-muted)] uppercase block font-semibold truncate">CO2 Avoided</span>
+              <span className="text-xs sm:text-lg font-bold text-sky-600 dark:text-sky-400 truncate block">
                 {savings?.summary?.co2_avoided_kg ? (savings.summary.co2_avoided_kg / 1000).toFixed(1) : '13.0'} T
               </span>
             </div>

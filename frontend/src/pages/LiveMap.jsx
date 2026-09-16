@@ -97,13 +97,13 @@ export default function LiveMap() {
           </select>
 
           {/* Layer Filter Toggles */}
-          <div className="flex items-center gap-1.5 p-1 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
+          <div className="flex items-center gap-1.5 p-1 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] overflow-x-auto no-scrollbar">
             <span className="text-[10px] text-[var(--text-muted)] font-bold px-1.5 hidden sm:inline">LAYERS:</span>
             <button
               type="button"
               onClick={() => setLayers(l => ({ ...l, hospitals: !l.hospitals }))}
               className={`
-                text-[11px] font-semibold px-2 py-1 rounded-md border transition-all cursor-pointer
+                text-xs font-semibold px-2.5 py-1.5 rounded-md border transition-all cursor-pointer min-h-[36px] whitespace-nowrap
                 ${layers.hospitals
                   ? 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/30'
                   : 'bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-secondary)]'
@@ -116,7 +116,7 @@ export default function LiveMap() {
               type="button"
               onClick={() => setLayers(l => ({ ...l, fuel: !l.fuel }))}
               className={`
-                text-[11px] font-semibold px-2 py-1 rounded-md border transition-all cursor-pointer
+                text-xs font-semibold px-2.5 py-1.5 rounded-md border transition-all cursor-pointer min-h-[36px] whitespace-nowrap
                 ${layers.fuel
                   ? 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30'
                   : 'bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-secondary)]'
@@ -129,7 +129,7 @@ export default function LiveMap() {
               type="button"
               onClick={() => setLayers(l => ({ ...l, repairs: !l.repairs }))}
               className={`
-                text-[11px] font-semibold px-2 py-1 rounded-md border transition-all cursor-pointer
+                text-xs font-semibold px-2.5 py-1.5 rounded-md border transition-all cursor-pointer min-h-[36px] whitespace-nowrap
                 ${layers.repairs
                   ? 'bg-teal-500/15 text-teal-700 dark:text-teal-400 border-teal-500/30'
                   : 'bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-secondary)]'
@@ -151,10 +151,10 @@ export default function LiveMap() {
           height="100%"
         />
 
-        {/* Floating Telemetry Badge */}
+        {/* Floating Telemetry Badge (Bottom-20 on mobile to clear BottomNav) */}
         {routeData && (
-          <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-xs z-[1000] bg-[var(--bg-surface)]/95 backdrop-blur-md border border-[var(--border-subtle)] rounded-xl p-3 sm:p-4 shadow-md">
-            <div className="flex items-center justify-between gap-2 mb-2">
+          <div className="absolute bottom-20 sm:bottom-4 left-3 right-3 sm:right-auto sm:max-w-xs z-[1000] bg-[var(--bg-surface)]/95 backdrop-blur-md border border-[var(--border-subtle)] rounded-xl p-3 sm:p-4 shadow-md">
+            <div className="flex items-center justify-between gap-2 mb-1.5">
               <strong className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
                 {selectedAltId ? 'Alternative Bypass' : 'Active Primary Route'}
               </strong>

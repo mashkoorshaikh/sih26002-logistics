@@ -27,17 +27,23 @@ import {
   Activity,
   Layers,
   ArrowRight,
-  Database
+  Database,
+  Compass
 } from 'lucide-react'
 import WeatherCard from '../weather/WeatherCard'
 import SegmentRiskSummary from '../risk/SegmentRiskSummary'
 import RouteAssistantCard from '../assistant/RouteAssistantCard'
 import { Card, CardHeader, Badge, Button } from '../ui'
 
-export default function RouteResults({
+/**
+ * High-priority Recommended Route Card
+ * Mobile-first composition: clean scannable hierarchy, 3-stat metric bar, 44px+ touch targets
+ */
+export function RecommendedRouteCard({
   routeData,
   selectedAltId = null,
-  onSelectAlternative = () => {}
+  onViewMap = null,
+  onSelectAlternative = null
 }) {
   if (!routeData) return null
 
@@ -47,10 +53,7 @@ export default function RouteResults({
     distance_km,
     duration_text,
     summary,
-    vehicle_info,
-    alternatives = [],
-    weather = null,
-    optimization_result = null
+    alternatives = []
   } = routeData
 
   const activeAlt = alternatives.find(a => a.id === selectedAltId)
@@ -59,7 +62,106 @@ export default function RouteResults({
   const currentTitle = activeAlt ? activeAlt.name : summary || 'Primary Route (Direct Alignment)'
   const activeFuelCost = activeAlt?.fuel_cost || routeData?.fuel_cost
   const activeSuitability = activeAlt ? activeAlt.vehicle_suitability : routeData?.vehicle_suitability
+  const mlRisk = routeData?.ml_risk
 
+  return (
+    <Card padding="default" className="border-l-4 border-l-[var(--primary)] shadow-sm">
+      {/* Top Header: Badge & Status */}
+      <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-bold text-[var(--primary)] uppercase tracking-wider bg-[var(--primary-subtle)] px-2 py-0.5 rounded-md">
+            RECOMMENDED ROUTE
+          </span>
+          <Badge variant="low" size="sm" dot>
+            LOW RISK ({mlRisk?.risk === 'HIGH' ? '76' : mlRisk?.risk === 'MEDIUM' ? '44' : '18'}/100)
+          </Badge>
+        </div>
+
+        {onViewMap && (
+          <button
+            type="button"
+            onClick={onViewMap}
+            className="text-xs font-semibold text-[var(--primary)] hover:underline inline-flex items-center gap-1.5 py-1 px-2 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] lg:hidden cursor-pointer"
+          >
+            <Compass className="w-3.5 h-3.5" />
+            <span>View Map</span>
+          </button>
+        )}
+      </div>
+
+      {/* Main Corridor Title */}
+      <h3 className="text-lg sm:text-2xl font-bold tracking-tight text-[var(--text-primary)]">
+        {source?.name || 'Guwahati'} → {destination?.name || 'Shillong'}
+      </h3>
+      <p className="text-xs text-[var(--text-secondary)] mt-0.5 mb-4">
+        {currentTitle}
+      </p>
+
+      {/* Scannable 3-Column Metric Strip (Mobile Optimized) */}
+      <div className="grid grid-cols-3 gap-2 py-2.5 border-y border-[var(--border-subtle)]">
+        <div className="p-2 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-center">
+          <span className="text-[10px] text-[var(--text-muted)] font-semibold uppercase block truncate">Distance</span>
+          <span className="text-sm sm:text-base font-bold text-[var(--text-primary)]">{currentDistance} km</span>
+        </div>
+        <div className="p-2 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-center">
+          <span className="text-[10px] text-[var(--text-muted)] font-semibold uppercase block truncate">Est. Time</span>
+          <span className="text-sm sm:text-base font-bold text-[var(--text-primary)] truncate">{currentDuration}</span>
+        </div>
+        <div className="p-2 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] text-center">
+          <span className="text-[10px] text-[var(--text-muted)] font-semibold uppercase block truncate">Fuel Cost</span>
+          <span className="text-sm sm:text-base font-bold text-[var(--primary)] truncate">
+            ₹{activeFuelCost?.fuel_cost ? activeFuelCost.fuel_cost.toLocaleString() : '1,817'}
+          </span>
+        </div>
+      </div>
+
+      {/* Value Reasons & Solver Tag */}
+      <div className="pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div className="flex items-center gap-2 flex-wrap text-[var(--text-secondary)]">
+          <span className="font-semibold text-[var(--text-primary)]">Optimized for:</span>
+          <div className="flex items-center gap-2 font-medium flex-wrap">
+            <span className="inline-flex items-center gap-1 text-[var(--primary)]">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Safe
+            </span>
+            <span className="inline-flex items-center gap-1 text-[var(--primary)]">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Efficient
+            </span>
+            <span className="inline-flex items-center gap-1 text-[var(--primary)]">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Bridge-Clear
+            </span>
+          </div>
+        </div>
+
+        <span className="text-[11px] text-[var(--text-muted)]">
+          OR-Tools Multi-Objective Solver
+        </span>
+      </div>
+    </Card>
+  )
+}
+
+export default function RouteResults({
+  routeData,
+  selectedAltId = null,
+  onSelectAlternative = () => {},
+  hideRecommendedCardOnMobile = false,
+  onViewMap = null
+}) {
+  if (!routeData) return null
+
+  const {
+    source,
+    destination,
+    distance_km,
+    duration_text,
+    summary,
+    alternatives = [],
+    weather = null,
+    optimization_result = null
+  } = routeData
+
+  const activeAlt = alternatives.find(a => a.id === selectedAltId)
+  const activeSuitability = activeAlt ? activeAlt.vehicle_suitability : routeData?.vehicle_suitability
   const activeAccessibility = activeAlt ? activeAlt.accessibility : routeData?.accessibility
   const mlRisk = routeData?.ml_risk
 
@@ -103,7 +205,7 @@ export default function RouteResults({
           <div className="w-9 h-9 rounded-lg bg-[var(--color-danger)] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
             <AlertOctagon className="w-5 h-5" />
           </div>
-          <div>
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
               <Badge variant="danger" size="sm">DISQUALIFIED BY OR-TOOLS</Badge>
               <span className="font-bold text-[var(--color-danger)]">
@@ -119,89 +221,40 @@ export default function RouteResults({
             <button
               type="button"
               onClick={() => onSelectAlternative(null)}
-              className="mt-2 text-[var(--primary)] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
+              className="mt-2 text-[var(--primary)] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer min-h-[44px]"
             >
               <span>Switch to recommended National Highway route</span>
-              <ArrowRight className="w-3 h-3" />
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
       )}
 
       {/* ─── 1. RECOMMENDED ROUTE CARD (HIGHEST PRIORITY) ────────────────── */}
-      <Card padding="default" className="border-l-4 border-l-[var(--primary)]">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <span className="text-[11px] font-bold text-[var(--primary)] uppercase tracking-wider">
-                RECOMMENDED ROUTE
-              </span>
-              <Badge variant="low" size="sm" dot>
-                LOW RISK (18/100)
-              </Badge>
-            </div>
-            <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text-primary)]">
-              {source?.name || 'Guwahati'} → {destination?.name || 'Shillong'}
-            </h3>
-            <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-              {currentTitle}
-            </p>
-          </div>
+      {/* If hideRecommendedCardOnMobile is true, this is hidden on mobile screens because it's rendered higher up in sequence */}
+      <div className={hideRecommendedCardOnMobile ? 'hidden lg:block' : 'block'}>
+        <RecommendedRouteCard
+          routeData={routeData}
+          selectedAltId={selectedAltId}
+          onViewMap={onViewMap}
+          onSelectAlternative={onSelectAlternative}
+        />
+      </div>
 
-          <div className="flex items-center gap-3 sm:text-right flex-wrap">
-            <div className="p-2.5 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
-              <span className="text-[10px] text-[var(--text-muted)] font-semibold uppercase block">Distance</span>
-              <span className="text-base font-bold text-[var(--text-primary)]">{currentDistance} km</span>
-            </div>
-            <div className="p-2.5 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
-              <span className="text-[10px] text-[var(--text-muted)] font-semibold uppercase block">Est. Duration</span>
-              <span className="text-base font-bold text-[var(--text-primary)]">{currentDuration}</span>
-            </div>
-            <div className="p-2.5 rounded-lg bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)]">
-              <span className="text-[10px] text-[var(--text-muted)] font-semibold uppercase block">Fuel Cost</span>
-              <span className="text-base font-bold text-[var(--primary)]">
-                ₹{activeFuelCost?.fuel_cost ? activeFuelCost.fuel_cost.toLocaleString() : '1,817'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Recommended Because Reasons */}
-        <div className="pt-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
-          <div className="flex items-center gap-2 text-[var(--text-secondary)]">
-            <span className="font-semibold text-[var(--text-primary)]">Recommended because:</span>
-            <div className="flex items-center gap-3 font-medium">
-              <span className="inline-flex items-center gap-1 text-[var(--primary)]">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Safe
-              </span>
-              <span className="inline-flex items-center gap-1 text-[var(--primary)]">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Efficient
-              </span>
-              <span className="inline-flex items-center gap-1 text-[var(--primary)]">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Vehicle-compatible
-              </span>
-            </div>
-          </div>
-
-          <div className="text-[11px] text-[var(--text-muted)]">
-            OR-Tools Multi-Objective Optimal
-          </div>
-        </div>
-      </Card>
-
-      {/* ─── 2. CANDIDATE ROUTE COMPARISON ───────────────────────────────── */}
+      {/* ─── 2. CANDIDATE ROUTE COMPARISON (1 ROW PER ROUTE ON MOBILE) ───── */}
       <Card padding="default">
         <CardHeader
           title="Candidate Route Comparison"
-          subtitle="Select any candidate route to view its geometry on the map"
+          subtitle="Tap any candidate route to view its path geometry on the live map"
           icon={Route}
           action={
             <Badge variant="brand" size="sm">
-              {allRoutes.length} Options Evaluated
+              {allRoutes.length} Options
             </Badge>
           }
         />
 
+        {/* 1 Column on Mobile, 2 on Tablet, 3 on Desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {allRoutes.map((r) => {
             const isSelected = selectedAltId === r.id
@@ -214,59 +267,73 @@ export default function RouteResults({
                 className={`
                   p-4 rounded-xl border transition-all duration-150 cursor-pointer select-none flex flex-col justify-between
                   ${isSelected
-                    ? 'bg-[var(--primary-subtle)] border-[var(--primary)] shadow-xs'
+                    ? 'bg-[var(--primary-subtle)] border-[var(--primary)] shadow-sm'
                     : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-subtle)]/50'
                   }
                 `}
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <div>
-                      <h4 className="text-xs font-bold text-[var(--text-primary)] leading-tight">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] leading-snug">
                         {r.name}
                       </h4>
-                      <span className="text-[11px] text-[var(--text-muted)]">{r.type}</span>
+                      <span className="text-[11px] text-[var(--text-muted)] block mt-0.5">{r.type}</span>
                     </div>
 
-                    {r.is_recommended && (
+                    {r.is_recommended ? (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--risk-low-bg)] text-[var(--risk-low)] border border-[var(--risk-low-border)] whitespace-nowrap">
                         BEST
                       </span>
+                    ) : (
+                      <Badge variant={riskVariant} size="sm" dot>
+                        {r.risk_tier}
+                      </Badge>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs py-2 my-2 border-t border-b border-[var(--border-subtle)]">
-                    <div>
-                      <span className="text-[10px] text-[var(--text-muted)] block">Distance / Time</span>
-                      <strong className="text-[var(--text-primary)]">{r.distance_km} km • {r.duration_text}</strong>
+                  {/* Clean 2-row metric list */}
+                  <div className="space-y-2 py-2.5 my-2 border-t border-b border-[var(--border-subtle)] text-xs">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-[var(--text-muted)]">Distance & Time:</span>
+                      <strong className="text-[var(--text-primary)] text-right">{r.distance_km} km • {r.duration_text}</strong>
                     </div>
 
-                    <div>
-                      <span className="text-[10px] text-[var(--text-muted)] block">Est. Fuel Cost</span>
-                      <strong className="text-[var(--text-primary)]">{r.fuel_cost}</strong>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-[var(--text-muted)]">Est. Fuel Cost:</span>
+                      <strong className="text-[var(--primary)] text-right">{r.fuel_cost}</strong>
                     </div>
 
-                    <div>
-                      <span className="text-[10px] text-[var(--text-muted)] block">Risk Tier</span>
-                      <Badge variant={riskVariant} size="sm" dot>
-                        {r.risk_tier} {r.risk_score}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-[var(--text-muted)]">Corridor Risk:</span>
+                      <Badge variant={riskVariant} size="sm">
+                        {r.risk_score}
                       </Badge>
                     </div>
 
-                    <div>
-                      <span className="text-[10px] text-[var(--text-muted)] block">Lifeline Buffer</span>
-                      <strong className="text-[var(--primary)]">{r.accessibility_score}</strong>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-[var(--text-muted)]">Lifeline Buffer:</span>
+                      <strong className="text-[var(--text-secondary)] text-right">{r.accessibility_score}</strong>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-1 text-[11px]">
-                  <span className="text-[var(--text-muted)]">
-                    Penalty: <strong className="text-[var(--text-primary)]">{r.overall_score}</strong>
+                {/* Touch Target Action Button (>= 44px hit area) */}
+                <div className="pt-2 flex items-center justify-between text-xs">
+                  <span className="text-[11px] text-[var(--text-muted)]">
+                    Score: <strong className="text-[var(--text-primary)]">{r.overall_score}</strong>
                   </span>
-                  <span className="text-[var(--primary)] font-semibold">
-                    {isSelected ? '✓ Active on Map' : 'Select Route ➔'}
-                  </span>
+                  <div
+                    className={`
+                      min-h-[44px] px-3 py-2 rounded-lg font-semibold flex items-center gap-1.5 transition-colors
+                      ${isSelected
+                        ? 'bg-[var(--primary)] text-white'
+                        : 'bg-[var(--bg-surface-subtle)] text-[var(--primary)] hover:bg-[var(--primary-subtle)]'
+                      }
+                    `}
+                  >
+                    <span>{isSelected ? '✓ Active on Map' : 'Select Route ➔'}</span>
+                  </div>
                 </div>
               </div>
             )
@@ -274,7 +341,7 @@ export default function RouteResults({
         </div>
       </Card>
 
-      {/* ─── 3. RISK BREAKDOWN DISPLAY (STACKED HIERARCHY) ────────────────── */}
+      {/* ─── 3. RISK BREAKDOWN DISPLAY (VERTICAL STACK ON MOBILE) ─────────── */}
       <Card padding="default">
         <CardHeader
           title="Corridor Risk Assessment"
@@ -282,6 +349,7 @@ export default function RouteResults({
           icon={ShieldAlert}
         />
 
+        {/* 1 Column on Mobile, 2 on Tablet, 4 on Desktop */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {/* Overall Route Risk */}
           <div className="p-3.5 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] space-y-2">
@@ -292,7 +360,7 @@ export default function RouteResults({
             <div className="w-full h-2 rounded-full bg-[var(--border-subtle)] overflow-hidden">
               <div className="h-full rounded-full bg-[var(--primary)] transition-all duration-300" style={{ width: '18%' }} />
             </div>
-            <span className="text-[10px] text-[var(--text-muted)] block">Safe operating threshold (&lt; 35/100)</span>
+            <span className="text-[11px] text-[var(--text-muted)] block">Safe operating threshold (&lt; 35/100)</span>
           </div>
 
           {/* Weather & Precipitation */}
@@ -304,7 +372,7 @@ export default function RouteResults({
             <div className="w-full h-2 rounded-full bg-[var(--border-subtle)] overflow-hidden">
               <div className="h-full rounded-full bg-[var(--risk-low)] transition-all duration-300" style={{ width: '14%' }} />
             </div>
-            <span className="text-[10px] text-[var(--text-muted)] block">Precipitation &lt; 15mm/h</span>
+            <span className="text-[11px] text-[var(--text-muted)] block">Precipitation &lt; 15mm/h</span>
           </div>
 
           {/* Terrain & Gradient */}
@@ -316,7 +384,7 @@ export default function RouteResults({
             <div className="w-full h-2 rounded-full bg-[var(--border-subtle)] overflow-hidden">
               <div className="h-full rounded-full bg-[var(--risk-med)] transition-all duration-300" style={{ width: '48%' }} />
             </div>
-            <span className="text-[10px] text-[var(--text-muted)] block">+920m Barapani mountain pass</span>
+            <span className="text-[11px] text-[var(--text-muted)] block">+920m Barapani mountain pass</span>
           </div>
 
           {/* Historical Incidents */}
@@ -328,7 +396,7 @@ export default function RouteResults({
             <div className="w-full h-2 rounded-full bg-[var(--border-subtle)] overflow-hidden">
               <div className="h-full rounded-full bg-[var(--risk-low)] transition-all duration-300" style={{ width: '12%' }} />
             </div>
-            <span className="text-[10px] text-[var(--text-muted)] block">Zero active fault breaches</span>
+            <span className="text-[11px] text-[var(--text-muted)] block">Zero active fault breaches</span>
           </div>
         </div>
       </Card>

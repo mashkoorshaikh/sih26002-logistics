@@ -8,7 +8,6 @@ import {
   Sparkles,
   AlertCircle,
   Loader2,
-  Ruler,
   ChevronDown,
   ChevronUp,
   Fuel
@@ -133,15 +132,15 @@ export default function RoutePlannerForm({
   const grossWeight = ((parseFloat(formData.vehicle_weight) || 0) + (parseFloat(formData.cargo_weight) || 0)).toFixed(1)
 
   return (
-    <div className="bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl p-5 sm:p-6 shadow-xs space-y-5">
+    <div className="bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-[var(--border-subtle)]">
+      <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-[var(--border-subtle)]">
         <div>
           <h2 className="text-sm sm:text-base font-bold text-[var(--text-primary)] tracking-tight">
-            Route Parameters
+            Route Planner
           </h2>
-          <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-            Configure origin, destination, chassis and cargo load
+          <p className="text-[11px] sm:text-xs text-[var(--text-secondary)] mt-0.5">
+            Configure origin, destination, vehicle and cargo payload
           </p>
         </div>
         <Badge variant="brand" size="sm">
@@ -149,18 +148,18 @@ export default function RoutePlannerForm({
         </Badge>
       </div>
 
-      {/* Quick Corridor Presets */}
-      <div className="space-y-2">
-        <span className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider block">
+      {/* Quick Corridor Presets (Scrollable on mobile) */}
+      <div className="space-y-1.5">
+        <span className="text-[10px] sm:text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider block">
           Preset Corridors
         </span>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
           {QUICK_ROUTES.map((preset, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => handleApplyQuickRoute(preset)}
-              className="text-xs font-medium px-2.5 py-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-all cursor-pointer select-none"
+              className="text-[11px] sm:text-xs font-medium px-2.5 py-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-all cursor-pointer whitespace-nowrap select-none flex-shrink-0"
             >
               {preset.label}
             </button>
@@ -168,43 +167,66 @@ export default function RoutePlannerForm({
         </div>
       </div>
 
-      {/* Form Controls */}
+      {/* Form Controls (Strictly Full-Width with 16px Gap on Mobile) */}
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* 1. Origin Field */}
+        {/* 1. Origin (From) */}
         <div>
+          <label className="form-label text-xs font-semibold text-[var(--text-secondary)] mb-1.5 block">
+            📍 Origin (From)
+          </label>
           <Input
-            label="Origin (From)"
             placeholder="e.g. Guwahati, Assam"
             required
             value={formData.source}
             onChange={e => handleChange('source', e.target.value)}
-            helperText="Key logistics hub or freight dispatch point"
+            className="w-full min-h-[44px]"
           />
         </div>
 
-        {/* 2. Destination Field */}
+        {/* 2. Destination (To) */}
         <div>
+          <label className="form-label text-xs font-semibold text-[var(--text-secondary)] mb-1.5 block">
+            📍 Destination (To)
+          </label>
           <Input
-            label="Destination (To)"
             placeholder="e.g. Shillong, Meghalaya"
             required
             value={formData.destination}
             onChange={e => handleChange('destination', e.target.value)}
-            helperText="Final delivery terminal or border checkpoint"
+            className="w-full min-h-[44px]"
           />
         </div>
 
-        {/* 3. Vehicle Configuration Group */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[var(--border-subtle)]">
+        {/* 3. Vehicle Type */}
+        <div>
+          <label className="form-label text-xs font-semibold text-[var(--text-secondary)] mb-1.5 block">
+            🚚 Vehicle Type
+          </label>
           <Select
-            label="Vehicle Type"
             value={formData.vehicle_type}
             onChange={e => handleChange('vehicle_type', e.target.value)}
             options={VEHICLE_OPTIONS}
+            className="w-full min-h-[44px]"
           />
+        </div>
 
+        {/* 4. Cargo Category */}
+        <div>
+          <label className="form-label text-xs font-semibold text-[var(--text-secondary)] mb-1.5 block">
+            📦 Cargo Payload
+          </label>
+          <Select
+            value={formData.cargo_type}
+            onChange={e => handleChange('cargo_type', e.target.value)}
+            options={CARGO_OPTIONS}
+            className="w-full min-h-[44px]"
+          />
+        </div>
+
+        {/* Desktop Optional Side-by-Side Payload Weights (Hidden on Mobile under Advanced) */}
+        <div className="hidden sm:grid sm:grid-cols-2 gap-3 pt-2 border-t border-[var(--border-subtle)]">
           <Input
-            label="Chassis Tare Weight (t)"
+            label="Chassis Weight (t)"
             type="number"
             step="0.5"
             min="0.5"
@@ -212,19 +234,9 @@ export default function RoutePlannerForm({
             value={formData.vehicle_weight}
             onChange={e => handleChange('vehicle_weight', e.target.value)}
           />
-        </div>
-
-        {/* 4. Cargo Configuration Group */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Select
-            label="Cargo Category"
-            value={formData.cargo_type}
-            onChange={e => handleChange('cargo_type', e.target.value)}
-            options={CARGO_OPTIONS}
-          />
 
           <Input
-            label="Cargo Net Weight (t)"
+            label="Cargo Weight (t)"
             type="number"
             step="0.5"
             min="0.1"
@@ -234,19 +246,38 @@ export default function RoutePlannerForm({
           />
         </div>
 
-        {/* Advanced Clearances & Fuel Options */}
+        {/* Advanced Physical Clearances & Tonnage Toggle */}
         <div className="pt-2 border-t border-[var(--border-subtle)]">
           <button
             type="button"
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className="flex items-center justify-between w-full py-1 text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer select-none"
+            className="flex items-center justify-between w-full py-1.5 text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer select-none min-h-[36px]"
           >
-            <span>Advanced Physical Clearances & Fuel Options</span>
+            <span>Advanced Clearances & Fuel Options</span>
             {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
 
           {showAdvanced && (
-            <div className="mt-3 p-3.5 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] space-y-3 animate-fade-in">
+            <div className="mt-2.5 p-3 sm:p-4 rounded-xl bg-[var(--bg-surface-subtle)] border border-[var(--border-subtle)] space-y-3 animate-fade-in text-xs">
+              {/* Mobile Payload Weights */}
+              <div className="grid grid-cols-2 gap-2.5 sm:hidden">
+                <Input
+                  label="Chassis (t)"
+                  type="number"
+                  step="0.5"
+                  value={formData.vehicle_weight}
+                  onChange={e => handleChange('vehicle_weight', e.target.value)}
+                />
+                <Input
+                  label="Cargo (t)"
+                  type="number"
+                  step="0.5"
+                  value={formData.cargo_weight}
+                  onChange={e => handleChange('cargo_weight', e.target.value)}
+                />
+              </div>
+
+              {/* Clearances */}
               <div className="grid grid-cols-3 gap-2">
                 <Input
                   label="Height (m)"
@@ -277,13 +308,13 @@ export default function RoutePlannerForm({
                 step="0.5"
                 value={formData.fuel_price}
                 onChange={e => handleChange('fuel_price', e.target.value)}
-                helperText="Used for terrain-compensated fuel cost calculations."
+                helperText="Used for terrain-compensated fuel costs."
               />
             </div>
           )}
         </div>
 
-        {/* Error message */}
+        {/* Error notice */}
         {error && (
           <div className="p-3.5 rounded-xl bg-[var(--risk-high-bg)] border border-[var(--risk-high-border)] text-xs text-[var(--color-danger)] font-medium flex items-center gap-2.5">
             <AlertCircle className="w-4.5 h-4.5 flex-shrink-0" />
@@ -291,16 +322,16 @@ export default function RoutePlannerForm({
           </div>
         )}
 
-        {/* Primary Action Button */}
+        {/* Primary Action Button (48px height, Full Width) */}
         <Button
           type="submit"
           variant="primary"
           size="lg"
-          className="w-full shadow-xs"
+          className="w-full min-h-[48px] shadow-xs font-bold text-sm uppercase tracking-wider justify-center"
           loading={loading}
           icon={ArrowRight}
         >
-          {loading ? 'Calculating Best Route...' : 'Find Best Route'}
+          {loading ? 'Calculating Route...' : 'FIND BEST ROUTE'}
         </Button>
       </form>
     </div>

@@ -143,7 +143,7 @@ export default function AlertsPage() {
                 type="button"
                 onClick={() => setActiveFilter(f)}
                 className={`
-                  text-xs font-semibold px-2.5 py-1 rounded-md transition-all whitespace-nowrap cursor-pointer
+                  text-xs font-semibold px-3 py-2 sm:py-1 rounded-md transition-all whitespace-nowrap cursor-pointer min-h-[38px]
                   ${activeFilter === f
                     ? 'bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]/30'
                     : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-subtle)] border border-transparent'
@@ -162,23 +162,23 @@ export default function AlertsPage() {
             <div
               key={item.id}
               className={`
-                p-4 rounded-xl border transition-all duration-150 flex flex-col sm:flex-row sm:items-center justify-between gap-3
+                p-3.5 sm:p-4 rounded-xl border transition-all duration-150 flex flex-col sm:flex-row sm:items-center justify-between gap-3
                 ${item.unread
                   ? 'bg-[var(--bg-surface)] border-[var(--border-strong)] shadow-xs'
                   : 'bg-[var(--bg-surface-subtle)]/50 border-[var(--border-subtle)] opacity-85'
                 }
               `}
             >
-              <div className="flex items-start gap-3.5">
+              <div className="flex items-start gap-3 min-w-0">
                 <div className={`
-                  w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs
+                  w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs
                   ${item.severity === 'HIGH' ? 'bg-[var(--risk-high-bg)] text-[var(--risk-high)]' : item.severity === 'MEDIUM' ? 'bg-[var(--risk-med-bg)] text-[var(--risk-med)]' : 'bg-[var(--risk-low-bg)] text-[var(--risk-low)]'}
                 `}>
-                  <AlertTriangle className="w-5.5 h-5.5" />
+                  <AlertTriangle className="w-5 h-5" />
                 </div>
 
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <Badge
                       variant={item.severity === 'HIGH' ? 'high' : item.severity === 'MEDIUM' ? 'medium' : 'low'}
                       size="sm"
@@ -186,7 +186,7 @@ export default function AlertsPage() {
                     >
                       {item.severity} RISK
                     </Badge>
-                    <span className="text-sm font-bold text-[var(--text-primary)]">
+                    <span className="text-xs sm:text-sm font-bold text-[var(--text-primary)] leading-snug">
                       {item.title}
                     </span>
                   </div>
@@ -205,6 +205,7 @@ export default function AlertsPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleMarkAsRead(item.id)}
+                      className="min-h-[44px]"
                     >
                       Mark read
                     </Button>
@@ -214,6 +215,7 @@ export default function AlertsPage() {
                     size="sm"
                     icon={Route}
                     onClick={() => navigate('/plan')}
+                    className="min-h-[44px]"
                   >
                     View route
                   </Button>

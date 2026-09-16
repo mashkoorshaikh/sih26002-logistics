@@ -41,6 +41,19 @@ export default function Login() {
     navigate('/admin')
   }
 
+  const handleDemoOfficerLogin = () => {
+    useAuthStore.getState().login(
+      {
+        id: 'officer-01',
+        full_name: 'Command Officer Sharma',
+        email: 'officer@neroute.gov.in',
+        organization: 'NER Logistics Operations'
+      },
+      'sih26002-officer-demo-token'
+    )
+    navigate('/dashboard')
+  }
+
   return (
     <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4 sm:p-6 bg-[var(--bg-app)]">
       <div className="w-full max-w-md">
@@ -124,15 +137,27 @@ export default function Login() {
               <div className="flex-1 h-px bg-[var(--border-subtle)]" />
             </div>
 
-            <button
-              id="demo-admin-login-btn"
-              type="button"
-              onClick={handleDemoAdminLogin}
-              className="w-full h-11 px-4 rounded-xl bg-[var(--primary-subtle)] border border-[var(--primary)]/30 text-[var(--primary)] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 hover:bg-[var(--primary)]/15 transition-all cursor-pointer shadow-xs"
-            >
-              <Building2 className="w-4 h-4" />
-              <span>Quick Demo Admin Portal (DoNER)</span>
-            </button>
+            <div className="space-y-2">
+              <button
+                id="demo-officer-login-btn"
+                type="button"
+                onClick={handleDemoOfficerLogin}
+                className="w-full h-11 px-4 rounded-xl bg-[var(--primary)] text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] transition-all cursor-pointer shadow-xs"
+              >
+                <Compass className="w-4 h-4" />
+                <span>Quick Demo Officer (Dashboard)</span>
+              </button>
+
+              <button
+                id="demo-admin-login-btn"
+                type="button"
+                onClick={handleDemoAdminLogin}
+                className="w-full h-11 px-4 rounded-xl bg-[var(--primary-subtle)] border border-[var(--primary)]/30 text-[var(--primary)] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 hover:bg-[var(--primary)]/15 transition-all cursor-pointer shadow-xs"
+              >
+                <Building2 className="w-4 h-4" />
+                <span>Quick Demo Admin Portal (DoNER)</span>
+              </button>
+            </div>
           </form>
 
           <p className="text-center mt-5 text-xs text-[var(--text-muted)]">

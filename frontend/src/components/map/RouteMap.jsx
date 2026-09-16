@@ -176,10 +176,8 @@ export default function RouteMap({
     }
   }
 
-  // Choose CartoDB tiles dynamically based on light/dark mode
-  const tileUrl = theme === 'dark'
-    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-    : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+  // OpenStreetMap tiles (100% free, reliable, no API key watermark)
+  const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
   return (
     <div
@@ -233,7 +231,7 @@ export default function RouteMap({
 
       {/* ─── MAP BOTTOM LEFT ROUTE LEGEND ─── */}
       {routeData && (
-        <div className="absolute bottom-3 left-3 z-[1000] flex flex-col gap-1.5 p-2.5 rounded-lg bg-[var(--bg-surface)]/90 backdrop-blur-md border border-[var(--border-subtle)] text-[11px] text-[var(--text-secondary)] shadow-xs select-none pointer-events-auto max-w-[280px] sm:max-w-xs">
+        <div className="absolute bottom-3 left-3 z-[1000] flex flex-col gap-1.5 p-2.5 rounded-lg bg-[var(--bg-surface)]/90 backdrop-blur-md border border-[var(--border-subtle)] text-[11px] text-[var(--text-secondary)] shadow-xs select-none pointer-events-auto max-w-[calc(100%-24px)] sm:max-w-xs">
           <div className="flex items-center gap-2">
             <span className="w-4 h-1.5 bg-[var(--primary)] rounded-full flex-shrink-0" />
             <span className={`truncate font-medium ${selectedAltId ? 'text-[var(--text-muted)]' : 'text-[var(--text-primary)] font-bold'}`}>
@@ -269,7 +267,7 @@ export default function RouteMap({
       >
         <TileLayer
           url={tileUrl}
-          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           maxZoom={19}
         />
 
