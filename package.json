@@ -1,0 +1,11 @@
+{
+  "name": "sih26002-logistics-platform",
+  "private": true,
+  "version": "1.0.0",
+  "description": "AI-Based Smart Logistics and Accessibility Intelligence Platform for North Eastern Region (SIH26002)",
+  "scripts": {
+    "build": "npm run build --prefix frontend",
+    "dev": "npm run dev --prefix frontend",
+    "preview": "npm run preview --prefix frontend"
+  }
+}
